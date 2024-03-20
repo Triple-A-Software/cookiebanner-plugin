@@ -25,24 +25,152 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
   });
   ctx.registerSettingsPage("cookie-banner", {
     path: "/cookie-banner",
-    label: { de: "Cookiebanner", en: "Cookie-banner" },
+    label: { de: "Einstellungen", en: "Settings" },
     type: "form",
     getDataHandler: actionHandler.toActionHandler("GET"),
     form: {
-      properties: {
-        active: {
+      label: {
+        de: "Einstellungen",
+        en: "Settings"
+      },
+      properties: [
+        {
+          id: "active",
           type: "checkbox",
           label: { de: "Cookiebanner aktiviert", en: "Cookie-banner active" }
         },
-        html: {
+        {
+          id: "categories",
+          type: "accordion",
+          label: {
+            de: "Cookiebanner Kategorien",
+            en: "Cookie-banner Categories"
+          },
+          items: [
+            {
+              label: {
+                de: "Essentiell",
+                en: "Essential"
+              },
+              id: "essential",
+              icon: "i-tabler-tools",
+              description: {
+                de: "Diese Cookies sind unerl\xE4sslich f\xFCr die Funktionalit\xE4t einer Website und erm\xF6glichen grundlegende Funktionen wie die Navigation und den Zugriff auf gesch\xFCtzte Bereiche",
+                en: "These cookies are essential for the functionality of a website, enabling basic functions like navigation and access to secure areas."
+              },
+              properties: [
+                {
+                  type: "text",
+                  id: "blockedResources",
+                  label: {
+                    de: "Blockierte Ressourcen",
+                    en: "Blocked resources"
+                  }
+                }
+              ]
+            },
+            {
+              label: {
+                de: "Performance",
+                en: "Performance"
+              },
+              id: "performance",
+              icon: "i-tabler-rocket",
+              description: {
+                de: "Diese Cookies sammeln Informationen dar\xFCber, wie Besucher eine Website nutzen, um deren Leistung und Funktionalit\xE4t zu verbessern, indem sie beispielsweise Seitenaufrufe und Ladezeiten verfolgen.",
+                en: "These cookies gather information about how visitors use a website to improve its performance and functionality, tracking metrics such as page views and load times."
+              },
+              properties: [
+                {
+                  type: "checkbox",
+                  id: "active",
+                  label: {
+                    de: "aktiviert",
+                    en: "active"
+                  }
+                },
+                {
+                  type: "text",
+                  id: "blockedResources",
+                  label: {
+                    de: "Blockierte Ressourcen",
+                    en: "Blocked resources"
+                  }
+                }
+              ]
+            },
+            {
+              label: {
+                de: "Marketing",
+                en: "Marketing"
+              },
+              icon: "i-tabler-building-store",
+              id: "marketing",
+              description: {
+                de: "Diese Cookies werden verwendet, um das Nutzerverhalten \xFCber verschiedene Websites hinweg zu verfolgen und Profile zu erstellen, die dann zur gezielten Schaltung von Anzeigen und zur Personalisierung von Inhalten verwendet werden k\xF6nnen.",
+                en: "These cookies are used to track user behavior across different websites, creating profiles that can be utilized for targeted advertising and content personalization."
+              },
+              properties: [
+                {
+                  type: "checkbox",
+                  id: "active",
+                  label: {
+                    de: "aktiviert",
+                    en: "active"
+                  }
+                },
+                {
+                  type: "text",
+                  id: "blockedResources",
+                  label: {
+                    de: "Blockierte Ressourcen",
+                    en: "Blocked resources"
+                  }
+                }
+              ]
+            },
+            {
+              label: {
+                de: "Statistik",
+                en: "Statistic"
+              },
+              id: "statistic",
+              icon: "i-tabler-chart-area-line",
+              description: {
+                de: "Diese Cookies sammeln anonyme Daten dar\xFCber, wie Besucher eine Website nutzen, um Einblicke in das Nutzerverhalten zu gewinnen und die Website entsprechend zu optimieren und zu verbessern.",
+                en: "These cookies collect anonymous data on how visitors interact with a website, providing insights into user behavior to optimize and enhance the website accordingly."
+              },
+              properties: [
+                {
+                  type: "checkbox",
+                  id: "active",
+                  label: {
+                    de: "aktiviert",
+                    en: "active"
+                  }
+                },
+                {
+                  type: "text",
+                  id: "blockedResources",
+                  label: {
+                    de: "Blockierte Ressourcen",
+                    en: "Blocked resources"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
           type: "code",
+          id: "html",
           language: "html",
           label: {
             de: "Cookiebanner Block HTML",
             en: "Cookiebanner Block HTML"
           }
         }
-      }
+      ]
     },
     actions: [
       {
@@ -55,12 +183,13 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
   ctx.registerElementType({
     name: "Cookiebanner",
     icon: "i-tabler-cookie",
-    template: `<div id="cookie-bottom-banner" tabindex="-1" class="hidden">
+    template: `<div id="cookie-banner-container" class="hidden">
+<div id="cookie-bottom-banner" tabindex="-1" class="hidden">
     <div class="flex items-center w-[70%]">
         <p class="flex items-center text-sm font-normal text-gray-500 dark:text-gray-400">
             <span>Diese Seite verwendet Cookies, um Ihre Erfahrung zu verbessern. Durch die Nutzung der Website stimmen Sie der Verwendung von Cookies zu. Sie k\xF6nnen die Cookie-Einstellungen jedoch auch anpassen, wenn Sie m\xF6chten. 
                 <a href="/data-privacy#cookie" class="flex items-center ms-0 text-sm font-medium text-blue-600 md:ms-1 md:inline-flex dark:text-blue-500 hover:underline">
-                    Mehr erfahren
+                 Mehr erfahren
                     <svg class="w-3 h-3 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
   </svg>
@@ -130,12 +259,17 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
             </div>
         </div>
     </div>
+</div>
 </div>`,
     style: "",
-    script: `
-await checkIframes();
+    script: `const res = await fetch("/api/plugins/cookiebanner-plugin/cookiebanner", { method: "GET" });
+const json = await res.json();
+checkIframes();
 if(!getCookie("showCookiebanner")){
     document.getElementById("cookie-bottom-banner").className="fixed bottom-0 start-0 z-50 flex justify-between w-full p-4 border-t border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+}
+if(json.active){
+    document.getElementById("cookie-banner-container").className=""
 }
 document.getElementById("acceptAllCookies").addEventListener("click", acceptAllCookies);
 document.getElementById("toggle-performance-cookie").addEventListener("change", setPerformanceCookies);
@@ -160,27 +294,21 @@ function getCookie(cname) {
 }
 
 function saveCookies() {
-    document.cookie = "showCookiebanner=false; max-age=2592000;
-    path=/; SameSite=Strict";
+    document.cookie = "showCookiebanner=false; max-age=2592000;path=/; SameSite=Strict";
     location.reload();
 }
 
 function setPerformanceCookies(e) {
-        document.cookie = \`performance=${e.target.checked}; max-age=2592000;
-        path=/; SameSite=Strict\`;
+        document.cookie = \`performance=\${e.target.checked}; max-age=2592000;path=/; SameSite=Strict\`;
 }
 
 function acceptAllCookies() {
-    document.cookie = "performance=true; max-age=2592000;
-    path=/; SameSite=Strict";
-    document.cookie = "showCookiebanner=false; max-age=2592000;
-    path=/; SameSite=Strict";
+    document.cookie = "performance=true; max-age=2592000;path=/; SameSite=Strict";
+    document.cookie = "showCookiebanner=false; max-age=2592000;path=/; SameSite=Strict";
      document.getElementById("cookie-bottom-banner").className="hidden"
 }
 
-async function checkIframes() {
-    const res = await fetch("/api/plugins/cookiebanner-plugin/cookiebanner", { method: "GET" });
-    const json = await res.json();
+function checkIframes() {
     
 if (json.active) {
     let iframes = document.body.getElementsByTagName("iframe");
