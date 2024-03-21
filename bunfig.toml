@@ -1,2 +1,0 @@
-[install.scopes]
-"@cms-local" = { url = "https://git.aaa-soft.net/api/packages/cms/npm/", token = "$NPM_TOKEN" }

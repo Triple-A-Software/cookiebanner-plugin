@@ -1,13 +1,13 @@
 {
-  "name": "cookiebanner-plugin",
-  "version": "0.0.0",
-  "dependencies": {
-    "@cms-local/plugin-interface": "link:@cms-local/plugin-interface"
-  },
-  "devDependencies": {
-     "@types/bun": "^1.0.8"
-  },
-  "scripts": {
-    "build": "bun run build.js"
-  }
+	"name": "cookiebanner-plugin",
+	"version": "0.0.0",
+	"dependencies": {
+		"@cms-local/plugin-interface": "link:@cms-local/plugin-interface"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.0.8"
+	},
+	"scripts": {
+		"build": "bun run build.js"
+	}
 }
