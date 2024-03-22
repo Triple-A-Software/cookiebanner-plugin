@@ -17,12 +17,15 @@
                 </span>
             </p>
         </div>
-        <div>
+        <div class="flex flex-wrap gap-[5px]">
             <button data-dismiss-target="#cookie-bottom-banner" id="acceptAllCookies" type="button"
-                class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Alle
+                class="h-[40px] focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Alle
                 akzeptieren</button>
+            <button data-dismiss-target="#cookie-bottom-banner" id="declineAllCookies" type="button"
+                class="h-[40px] focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Alle
+                ablehnen</button>
             <button data-modal-target="default-modal" data-modal-toggle="default-modal" type="button"
-                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cookies
+                class="h-[40px] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cookies
                 verwalten</button>
         </div>
         <div class="flex items-center">
@@ -37,7 +40,7 @@
             </button>
         </div>
     </div>
-    <div class="fixed bottom-[-48px] hover:bottom-[-18px] transition-all" id="cookie-settings-reminder">
+    <div class="fixed bottom-[-48px] hover:bottom-[-12px] transition-all" id="cookie-settings-reminder">
         <button data-modal-target="default-modal" data-modal-toggle="default-modal"
             class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-r-lg text-sm px-5 py-2.5 pb-6 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -85,21 +88,66 @@
                         Browsing-Erlebnis zu optimieren.
                     </p>
                     <div class="grid gap-4">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" checked class="sr-only peer" disabled>
-                            <div
-                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-                            </div>
-                            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Essenziell</span>
-                        </label>
-
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="toggle-performance-cookie" value="" class="sr-only peer">
-                            <div
-                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-                            </div>
-                            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Performance</span>
-                        </label>
+                        <div class="flex">
+                            <p class="italic text-gray-900 dark:text-white border-t-1">Diese Cookies sind unerlässlich
+                                für
+                                die
+                                Funktionalität einer Website und ermöglichen grundlegende Funktionen wie die
+                                Navigation und den Zugriff auf geschützte Bereiche</p>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer" disabled>
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                                <span
+                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Essenziell</span>
+                            </label>
+                        </div>
+                        <div class="grid gap-x-4 grid-cols-3" id="performance-cookie-toggle">
+                            <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies sammeln
+                                Informationen
+                                darüber, wie
+                                Besucher eine Website nutzen, um deren Leistung und Funktionalität zu
+                                verbessern, indem sie beispielsweise Seitenaufrufe und Ladezeiten verfolgen.</p>
+                            <label class="inline-flex items-center cursor-pointer" id="performance-cookie-toggle">
+                                <input type="checkbox" id="performance-cookie" value="" class="sr-only peer">
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                                <span
+                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Performance</span>
+                            </label>
+                        </div>
+                        <div class="flex" id="marketing-cookie-toggle">
+                            <p class="italic text-gray-900 dark:text-white border-t-1">Diese Cookies werden verwendet,
+                                um
+                                das
+                                Nutzerverhalten über verschiedene Websites hinweg zu verfolgen und Profile zu
+                                erstellen, die dann zur gezielten Schaltung von Anzeigen und zur Personalisierung von
+                                Inhalten verwendet werden können.</p>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="marketing-cookie" value="" class="sr-only peer">
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Marketing</span>
+                            </label>
+                        </div>
+                        <div class="flex" id="statistic-cookie-toggle">
+                            <p class="italic text-gray-900 dark:text-white border-t-1">Diese Cookies sammeln anonyme
+                                Daten
+                                darüber, wie
+                                Besucher eine Website nutzen, um Einblicke in das Nutzerverhalten zu
+                                gewinnen und die Website entsprechend zu optimieren und zu verbessern.</p>
+                            <label class="inline-flex items-center cursor-pointer" id="statistic-cookie-toggle">
+                                <input type="checkbox" id="statistic-cookie" value="" class="sr-only peer">
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                                <span
+                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Statistics</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <!-- Modal footer -->

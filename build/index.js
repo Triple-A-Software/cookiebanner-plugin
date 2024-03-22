@@ -17,6 +17,7 @@ function elementType_default(actionHandler) {
       properties: [
         {
           id: "active",
+          defaultValue: false,
           type: "checkbox",
           label: { de: "Cookiebanner aktiviert", en: "Cookie-banner active" }
         },
@@ -57,6 +58,7 @@ function elementType_default(actionHandler) {
                 en: "Performance"
               },
               id: "performance",
+              defaultValue: false,
               icon: "i-tabler-rocket",
               description: {
                 de: "Diese Cookies sammeln Informationen dar\xFCber, wie Besucher eine Website nutzen, um deren Leistung und Funktionalit\xE4t zu verbessern, indem sie beispielsweise Seitenaufrufe und Ladezeiten verfolgen.",
@@ -88,6 +90,7 @@ function elementType_default(actionHandler) {
                 en: "Marketing"
               },
               icon: "i-tabler-building-store",
+              defaultValue: false,
               id: "marketing",
               description: {
                 de: "Diese Cookies werden verwendet, um das Nutzerverhalten \xFCber verschiedene Websites hinweg zu verfolgen und Profile zu erstellen, die dann zur gezielten Schaltung von Anzeigen und zur Personalisierung von Inhalten verwendet werden k\xF6nnen.",
@@ -119,6 +122,7 @@ function elementType_default(actionHandler) {
                 en: "Statistic"
               },
               id: "statistic",
+              defaultValue: false,
               icon: "i-tabler-chart-area-line",
               description: {
                 de: "Diese Cookies sammeln anonyme Daten dar\xFCber, wie Besucher eine Website nutzen, um Einblicke in das Nutzerverhalten zu gewinnen und die Website entsprechend zu optimieren und zu verbessern.",
@@ -209,12 +213,15 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
                 </span>
             </p>
         </div>
-        <div>
+        <div class="flex flex-wrap gap-[5px]">
             <button data-dismiss-target="#cookie-bottom-banner" id="acceptAllCookies" type="button"
-                class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Alle
+                class="h-[40px] focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Alle
                 akzeptieren</button>
+            <button data-dismiss-target="#cookie-bottom-banner" id="declineAllCookies" type="button"
+                class="h-[40px] focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Alle
+                ablehnen</button>
             <button data-modal-target="default-modal" data-modal-toggle="default-modal" type="button"
-                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cookies
+                class="h-[40px] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cookies
                 verwalten</button>
         </div>
         <div class="flex items-center">
@@ -229,7 +236,7 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
             </button>
         </div>
     </div>
-    <div class="fixed bottom-[-48px] hover:bottom-[-18px] transition-all" id="cookie-settings-reminder">
+    <div class="fixed bottom-[-48px] hover:bottom-[-12px] transition-all" id="cookie-settings-reminder">
         <button data-modal-target="default-modal" data-modal-toggle="default-modal"
             class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-r-lg text-sm px-5 py-2.5 pb-6 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -277,21 +284,66 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
                         Browsing-Erlebnis zu optimieren.
                     </p>
                     <div class="grid gap-4">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" checked class="sr-only peer" disabled>
-                            <div
-                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-                            </div>
-                            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Essenziell</span>
-                        </label>
-
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="toggle-performance-cookie" value="" class="sr-only peer">
-                            <div
-                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-                            </div>
-                            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Performance</span>
-                        </label>
+                        <div class="flex">
+                            <p class="italic text-gray-900 dark:text-white border-t-1">Diese Cookies sind unerl\xE4sslich
+                                f\xFCr
+                                die
+                                Funktionalit\xE4t einer Website und erm\xF6glichen grundlegende Funktionen wie die
+                                Navigation und den Zugriff auf gesch\xFCtzte Bereiche</p>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer" disabled>
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                                <span
+                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Essenziell</span>
+                            </label>
+                        </div>
+                        <div class="grid gap-x-4 grid-cols-3" id="performance-cookie-toggle">
+                            <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies sammeln
+                                Informationen
+                                dar\xFCber, wie
+                                Besucher eine Website nutzen, um deren Leistung und Funktionalit\xE4t zu
+                                verbessern, indem sie beispielsweise Seitenaufrufe und Ladezeiten verfolgen.</p>
+                            <label class="inline-flex items-center cursor-pointer" id="performance-cookie-toggle">
+                                <input type="checkbox" id="performance-cookie" value="" class="sr-only peer">
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                                <span
+                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Performance</span>
+                            </label>
+                        </div>
+                        <div class="flex" id="marketing-cookie-toggle">
+                            <p class="italic text-gray-900 dark:text-white border-t-1">Diese Cookies werden verwendet,
+                                um
+                                das
+                                Nutzerverhalten \xFCber verschiedene Websites hinweg zu verfolgen und Profile zu
+                                erstellen, die dann zur gezielten Schaltung von Anzeigen und zur Personalisierung von
+                                Inhalten verwendet werden k\xF6nnen.</p>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="marketing-cookie" value="" class="sr-only peer">
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Marketing</span>
+                            </label>
+                        </div>
+                        <div class="flex" id="statistic-cookie-toggle">
+                            <p class="italic text-gray-900 dark:text-white border-t-1">Diese Cookies sammeln anonyme
+                                Daten
+                                dar\xFCber, wie
+                                Besucher eine Website nutzen, um Einblicke in das Nutzerverhalten zu
+                                gewinnen und die Website entsprechend zu optimieren und zu verbessern.</p>
+                            <label class="inline-flex items-center cursor-pointer" id="statistic-cookie-toggle">
+                                <input type="checkbox" id="statistic-cookie" value="" class="sr-only peer">
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                                <span
+                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Statistics</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <!-- Modal footer -->
@@ -304,101 +356,109 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
             </div>
         </div>
     </div>
-</div>
-`,
+</div>`,
     style: "",
-    script: `const res = await fetch("/api/plugins/cookiebanner-plugin/cookiebanner", {
-	method: "GET",
-});
-const json = await res.json();
-checkIframes();
-if (!getCookie("showCookiebanner")) {
-	document.getElementById("cookie-bottom-banner").className =
-		"fixed bottom-0 start-0 z-50 flex justify-between w-full p-4 border-t border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600";
+    script: `const cookies = ["performance", "statistic", "marketing"];
+
+async function fetchCookieBanner() {
+    const res = await fetch("/api/plugins/cookiebanner-plugin/cookiebanner", {
+        method: "GET",
+    });
+    return await res.json();
 }
-if (json.active) {
-	document.getElementById("cookie-banner-container").className = "";
-}
-document
-	.getElementById("acceptAllCookies")
-	.addEventListener("click", acceptAllCookies);
-document
-	.getElementById("toggle-performance-cookie")
-	.addEventListener("change", setPerformanceCookies);
-document.getElementById("toggle-performance-cookie").checked =
-	getCookie("performance") === "true" ? true : false;
-document
-	.getElementById("save-cookies-settings")
-	.addEventListener("click", saveCookies);
 
 function getCookie(cname) {
-	let name = cname + "=";
-	let decodedCookie = decodeURIComponent(document.cookie);
-	let ca = decodedCookie.split(";");
-	for (let i = 0; i < ca.length; i++) {
-		let c = ca[i];
-		while (c.charAt(0) == " ") {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) == 0) {
-			return c.substring(name.length, c.length);
-		}
-	}
-	return "";
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == " ") {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function initializeCookieBanner(json) {
+    if (!getCookie("showCookiebanner")) {
+        document.getElementById("cookie-bottom-banner").className =
+            "fixed bottom-0 start-0 z-50 md:flex-wrap flex justify-between w-full p-4 border-t border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600";
+    }
+    if (json.active) {
+        document.getElementById("cookie-banner-container").className = "";
+        cookies.forEach((cookie) => {
+            if (!json.categories[cookie].active) {
+                document.getElementById(cookie + "-cookie-toggle").style.display = "none";
+            }
+        });
+    }
+}
+
+function setEventListeners() {
+    document.getElementById("acceptAllCookies").addEventListener("click", acceptAllCookies);
+    document.getElementById("declineAllCookies").addEventListener("click", declineAllCookies);
+
+    cookies.forEach((cookie) => {
+        document.getElementById(cookie + "-cookie").addEventListener("change", setCookie);
+    });
+    document.getElementById("save-cookies-settings").addEventListener("click", saveCookies);
+}
+
+function setCookie(e) {
+    const cookieName = e.target.id.replace("-cookie", "");
+    document.cookie = \`\${cookieName}=\${e.target.checked}; max-age=2592000; path=/; SameSite=Strict\`;
 }
 
 function saveCookies() {
-	document.cookie =
-		"showCookiebanner=false; max-age=2592000;path=/; SameSite=Strict";
-	location.reload();
-}
-
-function setPerformanceCookies(e) {
-	document.cookie = \`performance=\${e.target.checked}; max-age=2592000;path=/; SameSite=Strict\`;
+    document.cookie = "showCookiebanner=false; max-age=2592000; path=/; SameSite=Strict";
+    location.reload();
 }
 
 function acceptAllCookies() {
-	document.cookie = "performance=true; max-age=2592000;path=/; SameSite=Strict";
-	document.cookie =
-		"showCookiebanner=false; max-age=2592000;path=/; SameSite=Strict";
-	document.getElementById("cookie-bottom-banner").className = "hidden";
+    cookies.forEach((cookie) => {
+        document.cookie = \`\${cookie}=true; max-age=2592000; path=/; SameSite=Strict\`;
+    });
+    document.getElementById("cookie-bottom-banner").className = "hidden";
+    saveCookies();
 }
 
-function checkIframes() {
-	if (json.active) {
-		let iframes = document.body.getElementsByTagName("iframe");
-		for (let i = 0; i < iframes.length; i++) {
-			let currentIframe = iframes[i];
-			if (document.cookie.includes("performance=true")) {
-				if (currentIframe.getAttribute("data-src")) {
-					currentIframe.setAttribute(
-						"src",
-						currentIframe.getAttribute("data-src"),
-					);
-				}
-			} else {
-				if (currentIframe.outerHTML) {
-					currentIframe.outerHTML = json.html;
-				}
-			}
-		}
-	}
+function declineAllCookies() {
+    cookies.forEach((cookie) => {
+        document.cookie = \`\${cookie}=false; max-age=2592000; path=/; SameSite=Strict\`;
+    });
+    document.getElementById("cookie-bottom-banner").className = "hidden";
+    saveCookies();
 }
+
+function blockResources(json) {
+    if (json.active) {
+        const elementsWithBlockedBy = document.querySelectorAll("[blocked-by]");
+        elementsWithBlockedBy.forEach((element) => {
+            const blockedByValue = element.getAttribute("blocked-by");
+            if (json.categories[blockedByValue].active && getCookie(blockedByValue) !== "true") {
+                element.outerHTML = json.html;
+            }
+        });
+    }
+}
+
+async function main() {
+    const json = await fetchCookieBanner();
+    initializeCookieBanner(json);
+    setEventListeners();
+    blockResources(json);
+}
+
+main();
 `,
     form: {
       label: {
         de: "Cookiebanner",
         en: "Cookie-banner"
-      },
-      properties: {
-        cookie_banner: {
-          label: {
-            de: "Cookiebanner HTML",
-            en: "Cookie-banner HTML"
-          },
-          type: "code",
-          language: "html"
-        }
       }
     }
   });

@@ -40,16 +40,6 @@ export default definePlugin((ctx) => {
 				de: "Cookiebanner",
 				en: "Cookie-banner",
 			},
-			properties: {
-				cookie_banner: {
-					label: {
-						de: "Cookiebanner HTML",
-						en: "Cookie-banner HTML",
-					},
-					type: "code",
-					language: "html",
-				},
-			},
 		},
 	});
 
