@@ -1,12 +1,11 @@
-// /home/marc/Dev/cms/plugins/Cookiebanner-Plugin/node_modules/@cms-local/plugin-interface/index.ts
+// /home/ychop/Dokumente/dev/cookiebanner-plugin/node_modules/@cms-local/plugin-interface/index.ts
 function definePlugin(def) {
   return def;
 }
 
-// elementType.js
+// ../plugin-inte
 function elementType_default(actionHandler) {
   return {
-    path: "/cookie-banner",
     label: { de: "Einstellungen", en: "Settings" },
     type: "form",
     getDataHandler: actionHandler.toActionHandler("GET"),
@@ -44,6 +43,7 @@ function elementType_default(actionHandler) {
                 {
                   type: "text",
                   id: "blockedResources",
+                  defaultValue: "[blocked-by='essential']",
                   label: {
                     de: "Blockierte Ressourcen",
                     en: "Blocked resources"
@@ -74,6 +74,7 @@ function elementType_default(actionHandler) {
                 {
                   type: "text",
                   id: "blockedResources",
+                  defaultValue: "[blocked-by='performance']",
                   label: {
                     de: "Blockierte Ressourcen",
                     en: "Blocked resources"
@@ -104,6 +105,7 @@ function elementType_default(actionHandler) {
                 {
                   type: "text",
                   id: "blockedResources",
+                  defaultValue: "[blocked-by='marketing']",
                   label: {
                     de: "Blockierte Ressourcen",
                     en: "Blocked resources"
@@ -134,6 +136,7 @@ function elementType_default(actionHandler) {
                 {
                   type: "text",
                   id: "blockedResources",
+                  defaultValue: "[blocked-by='statistic']",
                   label: {
                     de: "Blockierte Ressourcen",
                     en: "Blocked resources"
@@ -164,9 +167,9 @@ function elementType_default(actionHandler) {
   };
 }
 
-// index.js
+// ../plugi
 var DATA_ID = 0;
-var Cookiebanner_Plugin_default = definePlugin((ctx) => {
+var cookiebanner_plugin_default = definePlugin((ctx) => {
   const actionHandler = ctx.registerHandler(["POST", "GET"], "/cookiebanner", async (req) => {
     const fromDb = await ctx.storage.getOne(DATA_ID);
     if (req.method === "GET") {
@@ -399,8 +402,8 @@ function checkIframes() {
       }
     }
   });
-  ctx.registerSettingsPage("cookie-banner", elementType_default(actionHandler));
+  ctx.registerSettingsPage("/cookie-banner", elementType_default(actionHandler));
 });
 export {
-  Cookiebanner_Plugin_default as default
+  cookiebanner_plugin_default as default
 };
