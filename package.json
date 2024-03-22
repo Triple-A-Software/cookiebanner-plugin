@@ -1,6 +1,6 @@
 {
 	"name": "cookiebanner-plugin",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"dependencies": {
 		"@cms-local/plugin-interface": "link:@cms-local/plugin-interface"
 	},
