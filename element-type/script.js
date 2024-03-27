@@ -1,4 +1,4 @@
-const cookies = ["performance", "statistic", "marketing"];
+const cookies = ["performance", "statistic", "marketing", "functional"];
 
 async function fetchCookieBanner() {
     const res = await fetch("/api/plugins/cookiebanner-plugin/cookiebanner", {

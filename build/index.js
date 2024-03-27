@@ -205,13 +205,12 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
     icon: "i-tabler-cookie",
     template: `<div id="cookie-banner-container" class="hidden">
     <div id="cookie-bottom-banner" tabindex="-1" class="hidden">
-        <div class="flex items-center w-[70%]">
-            <p class="flex items-center text-sm font-normal text-gray-500 dark:text-gray-400">
+        <div class="cookie-banner-container">
+            <p class="cookie-banner-text">
                 <span>Diese Seite verwendet Cookies, um Ihre Erfahrung zu verbessern. Durch die Nutzung der Website
                     stimmen Sie der Verwendung von Cookies zu. Sie k\xF6nnen die Cookie-Einstellungen jedoch auch anpassen,
                     wenn Sie m\xF6chten.
-                    <a href="/data-privacy#cookie" id="link-to-data-privacy"
-                        class="flex items-center ms-0 text-sm font-medium text-blue-600 md:ms-1 md:inline-flex dark:text-blue-500 hover:underline">
+                    <a href="/data-privacy#cookie" id="link-to-data-privacy" class="cookie-banner-link">
                         Mehr erfahren
                         <svg class="w-3 h-3 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 14 10">
@@ -222,20 +221,20 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
                 </span>
             </p>
         </div>
-        <div class="flex flex-wrap gap-[5px]">
+        <div class="cookie-banner-btn-container">
             <button data-dismiss-target="#cookie-bottom-banner" id="acceptAllCookies" type="button"
-                class="h-[40px] focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Alle
+                class="cookie-banner-btn bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300">Alle
                 akzeptieren</button>
             <button data-dismiss-target="#cookie-bottom-banner" id="declineAllCookies" type="button"
-                class="h-[40px] focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Alle
+                class="cookie-banner-btn bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300">Alle
                 ablehnen</button>
             <button data-modal-target="default-modal" data-modal-toggle="default-modal" type="button"
-                class="h-[40px] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cookies
+                class="cookie-banner-btn bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:ring-gray-300">Cookies
                 verwalten</button>
         </div>
-        <div class="flex items-center">
+        <div class="cookie-banner-close-btn-container">
             <button data-dismiss-target="#cookie-bottom-banner" type="button"
-                class="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 dark:hover:bg-gray-600 dark:hover:text-white">
+                class="cookie-banner-close-btn hover:bg-gray-200 hover:text-gray-900">
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 14 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -245,9 +244,8 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
             </button>
         </div>
     </div>
-    <div class="fixed bottom-[-48px] hover:bottom-[-12px] transition-all" id="cookie-settings-reminder">
-        <button onclick="cookie_banner_settings.showModal()"
-            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-r-lg text-sm px-5 py-2.5 pb-6 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+    <div class="cookie-banner-spy-container" id="cookie-settings-reminder">
+        <button onclick="cookie_banner_settings.showModal()" class="cookie-banner-spy">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="icon icon-tabler icons-tabler-outline icon-tabler-cookie">
@@ -265,19 +263,16 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
     </div>
 
     <!-- Cookie settings -->
-    <dialog id="cookie_banner_settings"
-        class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-2xl max-h-full">
+    <dialog id="cookie_banner_settings" class="cookie-banner-modal-container">
+        <div class="cookie-banner-modal-content">
             <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <div class="cookie-banner-modal-header">
                 <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                <div class="cookie-banner-modal-header-text">
+                    <h3>
                         Cookie Einstellungen
                     </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        onclick="cookie_banner_settings.close()">
+                    <button type="button" class="cookie-banner-close-btn" onclick="cookie_banner_settings.close()">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -287,84 +282,85 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
                     </button>
                 </div>
                 <!-- Modal body -->
-                <div class="p-4 md:p-5 space-y-4">
-                    <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                <div class="cookie-banner-modal-body">
+                    <p class="cookie-banner-modal-body-text">
                         Hier kannst du die Verwendung von Cookies nach deinen Pr\xE4ferenzen anpassen, um dein
                         Browsing-Erlebnis zu optimieren.
                     </p>
-                    <div class="grid gap-4">
-                        <div class="grid gap-x-4 grid-cols-3">
-                            <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies sind
+                    <div class="cookie-banner-modal-body-container">
+                        <div class="cookie-banner-modal-body-btn-container">
+                            <p class="cookie-banner-modal-body-btn-text">Diese Cookies sind
                                 unerl\xE4sslich
                                 f\xFCr die Funktionalit\xE4t einer Website und erm\xF6glichen grundlegende Funktionen wie die
                                 Navigation und den Zugriff auf gesch\xFCtzte Bereiche</p>
                             <label class="inline-flex items-center cursor-pointer">
-                                <input type="checkbox" checked class="sr-only peer">
+                                <input type="checkbox" checked class="sr-only peer" disabled>
                                 <div
-                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
                                 </div>
-                                <span
-                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Funktional</span>
+                                <span class="cookie-banner-modal-body-span">Funktional</span>
                             </label>
                         </div>
-                        <div class="grid gap-x-4 grid-cols-3" id="performance-cookie-toggle">
-                            <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies sammeln
+                        <div class="cookie-banner-modal-body-btn-container" id="performance-cookie-toggle">
+                            <p class="cookie-banner-modal-body-btn-text">Diese Cookies sammeln
                                 Informationen dar\xFCber, wie Besucher eine Website nutzen, um deren Leistung und
                                 Funktionalit\xE4t zu
                                 verbessern, indem sie beispielsweise Seitenaufrufe und Ladezeiten verfolgen.</p>
-                            <label class="inline-flex items-center cursor-pointer" id="performance-cookie-toggle">
+                            <label class="cookie-banner-modal-body-btn-label" id="performance-cookie-toggle">
                                 <input type="checkbox" id="performance-cookie" value="" class="sr-only peer">
                                 <div
-                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
                                 </div>
-                                <span
-                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Performance</span>
+                                <span class="cookie-banner-modal-body-span">Performance</span>
                             </label>
                         </div>
-                        <div class="grid gap-x-4 grid-cols-3" id="marketing-cookie-toggle">
-                            <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies werden
-                                verwendet,
+                        <div class="cookie-banner-modal-body-btn-container" id="marketing-cookie-toggle">
+                            <p class="cookie-banner-modal-body-btn-text">Diese Cookies werden verwendet,
                                 um das Nutzerverhalten \xFCber verschiedene Websites hinweg zu verfolgen und Profile zu
                                 erstellen, die dann zur gezielten Schaltung von Anzeigen und zur Personalisierung von
                                 Inhalten verwendet werden k\xF6nnen.</p>
-                            <label class="inline-flex items-center cursor-pointer">
+                            <label class="cookie-banner-modal-body-btn-label">
                                 <input type="checkbox" id="marketing-cookie" value="" class="sr-only peer">
                                 <div
-                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
                                 </div>
-                                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Marketing</span>
+                                <span class="cookie-banner-modal-body-span">Marketing</span>
                             </label>
                         </div>
-                        <div class="grid gap-x-4 grid-cols-3" id="statistic-cookie-toggle">
-                            <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies sammeln
-                                anonyme
-                                Daten
-                                dar\xFCber, wie
-                                Besucher eine Website nutzen, um Einblicke in das Nutzerverhalten zu
+                        <div class="cookie-banner-modal-body-btn-container" id="statistic-cookie-toggle">
+                            <p class="cookie-banner-modal-body-btn-text">Diese Cookies sammeln
+                                anonyme Daten dar\xFCber, wie Besucher eine Website nutzen, um Einblicke in das
+                                Nutzerverhalten zu
                                 gewinnen und die Website entsprechend zu optimieren und zu verbessern.</p>
-                            <label class="inline-flex items-center cursor-pointer" id="statistic-cookie-toggle">
+                            <label class="cookie-banner-modal-body-btn-label" id="statistic-cookie-toggle">
                                 <input type="checkbox" id="statistic-cookie" value="" class="sr-only peer">
                                 <div
-                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
                                 </div>
-                                <span
-                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Statistics</span>
+                                <span class="cookie-banner-modal-body-span">Statistics</span>
                             </label>
                         </div>
                     </div>
                 </div>
                 <!-- Modal footer -->
-                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <div class="cookie-banner-modal-footer">
                     <button id="save-cookies-settings" onclick="cookie_banner_settings.close()" type="button"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Speichern</button>
+                        class="cookie-banner-btn bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">Speichern</button>
                     <button onclick="cookie_banner_settings.close()" type="button"
-                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Abbrechen</button>
+                        class="cookie-banner-btn focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Abbrechen</button>
                 </div>
             </div>
         </div>
     </dialog>
 </div>`,
-    style: `.cookie-banner-toggle-btn{
+    style: `h3{
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+
+}
+
+.cookie-banner-toggle-btn{
     padding-top: 0.625rem;
     padding-bottom: 0.625rem;
     padding-left: 1.25rem;
@@ -375,8 +371,191 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
     font-weight: 500;
     color: #ffffff;
     height: 40px;
-}`,
-    script: `const cookies = ["performance", "statistic", "marketing"];
+}
+
+.cookie-banner-container,
+.cookie-banner-text,
+.cookie-banner-close-btn-container,
+.cookie-banner-modal-header-text,
+.cookie-banner-modal-footer,
+.cookie-banner-link {
+    display: flex;
+    align-items: center;
+}
+
+.cookie-banner-link,
+.cookie-banner-text,
+.cookie-banner-btn,
+.cookie-banner-close-btn,
+.cookie-banner-spy
+{
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.cookie-banner-container{
+    width: 70%;
+}
+
+.cookie-banner-text{
+    font-weight: 400;
+}
+
+.cookie-banner-link{
+    margin-left: 0; 
+    font-weight: 600;
+    color: rgba(63, 131, 248, .5);
+}
+
+.cookie-banner-link:hover{
+    text-decoration: underline;
+}
+
+.cookie-banner-btn-container{
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.cookie-banner-btn{
+    height: 40px;
+    font-weight: 600;
+    color: white;
+    outline: none;
+    border-radius: 25px;
+    padding: .625rem 1.25rem;
+    margin-right: 1rem;
+}
+
+.cookie-banner-close-btn{
+    flex-shrink: unset;
+    display: inline-flex;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    border-radius: 25px;
+    padding: .375rem;
+    color: lightgray;
+}
+
+.cookie-banner-spy-container{
+    position: fixed;
+    bottom: -48px;
+    transition: all;
+}
+
+.cookie-banner-spy-container:hover{
+    bottom: -12px;
+}
+
+.cookie-banner-spy{
+    color: white;
+    background: lightgray;
+    font-weight: 600;
+    border-radius: 25px;
+    padding: .625rem 1.25rem;
+    padding-bottom: 2rem !important;
+}
+
+.cookie-banner-modal-container{
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.cookie-banner-modal-content{
+    position: relative;
+    padding: 1rem;
+    width: 100%;
+
+}
+
+.cookie-banner-modal-header{
+    position: relative;
+    background: white;
+    border-radius: 25px;
+}
+
+.cookie-banner-modal-header-text{
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: lightgray solid 1px;
+}
+
+.cookie-banner-modal-body{
+    padding: 1rem; 
+}
+
+.cookie-banner-modal-body-text{
+    font-size: 1rem;
+    color: lightgray;
+}
+
+.cookie-banner-modal-body-container, .cookie-banner-modal-body-btn-container{
+    display: grid;
+    gap: 1rem;
+}
+
+.cookie-banner-modal-body-btn-container{
+    grid-template-columns: repeat(3,1fr);
+}
+
+.cookie-banner-modal-body-btn-text{
+    font-style: italic;
+    grid-column: span 2 / span 2;
+    border-top: lightgray solid 1px;
+}
+
+.cookie-banner-modal-body-btn-label{
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.cookie-banner-toogle{
+    position: relative;
+    border-radius: 9999px;
+    width: 2.75rem;
+    height: 1.5rem;
+    background-color: #E5E7EB;
+    border-radius: 100%;
+}
+
+.cookie-banner-toogle::after {
+   position: absolute;
+   top: 2px;
+   left: 2px;
+   background: white;
+   border: lightgray solid 1px;
+   content: '';
+   border-radius: 100%;
+   width: 1.25rem;
+   height: 1.25rem;
+   transition: all;
+}
+
+.cookie-banner-modal-body-span{
+    margin-left: .725rem;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.cookie-banner-modal-footer{
+    padding: 1rem;
+    border: lightgray solid 1px;
+    border-bottom-left-radius: 25px;
+}
+`,
+    script: `const cookies = ["performance", "statistic", "marketing", "functional"];
 
 async function fetchCookieBanner() {
     const res = await fetch("/api/plugins/cookiebanner-plugin/cookiebanner", {
