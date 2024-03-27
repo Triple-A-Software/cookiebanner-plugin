@@ -41,7 +41,6 @@ export default function (actionHandler) {
                                 {
                                     type: "text",
                                     id: "blockedResources",
-
                                     defaultValue: "[blocked-by='functional']",
                                     label: {
                                         de: "Blockierte Ressourcen",

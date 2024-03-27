@@ -1,7 +1,7 @@
 {
     "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
     "formatter": {
-        "indentWidth": 4,
+        "indentWidth": 2,
         "indentStyle": "space",
         "lineWidth": 100,
         "formatWithErrors": true

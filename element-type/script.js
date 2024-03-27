@@ -78,21 +78,20 @@ function declineAllCookies() {
     saveCookies();
 }
 
-function handleBlockedResources() {
-    const blockedElements = document.querySelectorAll("[blocked-by]");
-
-    for (const el of blockedElements) {
-        const blockedBy = el.getAttribute("blocked-by");
-        if (getCookie(blockedBy) === "true") {
-            if (el.hasAttribute("data-type")) {
-                const element = document.createElement(el.dataset.type);
-
-                for (let i = 0; i < el.attributes.length; i++) {
-                    const attr = el.attributes[i];
-                    if (attr.name === "blocked-by") continue;
-                    element.setAttribute(attr.name.replace("blocked-", ""), attr.textContent);
+function handleBlockedResources(json) {
+    for (const cookie of cookies) {
+        const blockedElements = document.querySelectorAll(json.categories[cookie].blockedResources);
+        for (const el of blockedElements) {
+            if (getCookie(cookie) === "true") {
+                if (el.hasAttribute("data-type")) {
+                    const element = document.createElement(el.dataset.type);
+                    for (let i = 0; i < el.attributes.length; i++) {
+                        const attr = el.attributes[i];
+                        if (attr.name === "blocked-by") continue;
+                        element.setAttribute(attr.name.replace("blocked-", ""), attr.textContent);
+                    }
+                    el.replaceWith(element);
                 }
-                el.replaceWith(element);
             }
         }
     }
@@ -103,7 +102,7 @@ async function main() {
     initializeCookieBanner(json);
     setEventListeners();
     setLinkToDataPrivacy(json.link);
-    handleBlockedResources();
+    handleBlockedResources(json);
 }
 
 main();

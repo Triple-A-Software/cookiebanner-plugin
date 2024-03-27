@@ -183,10 +183,11 @@ function elementType_default(actionHandler) {
 }
 
 // index.js
+var cookies = ["performance", "statistic", "marketing", "functional"];
 var cookiebanner_plugin_default = definePlugin(async (ctx) => {
-  const data = await ctx.storage.getAll();
-  let db_id = data.at(0)?.id;
-  if (data.length === 0) {
+  const allData = await ctx.storage.getAll();
+  let db_id = allData.at(0)?.id;
+  if (allData.length === 0) {
     db_id = await ctx.storage.createOne().id;
   }
   console.log("ID", db_id);
@@ -196,8 +197,8 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
       return fromDb.data;
     }
     if (req.method === "POST") {
-      const { data: data2 } = await ctx.storage.updateOne(db_id, req.body);
-      return data2;
+      const { data } = await ctx.storage.updateOne(db_id, req.body);
+      return data;
     }
     throw Error(`Method not allowed ${req.method}`);
   });
@@ -295,7 +296,8 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
                                 f\xFCr die Funktionalit\xE4t einer Website und erm\xF6glichen grundlegende Funktionen wie die
                                 Navigation und den Zugriff auf gesch\xFCtzte Bereiche</p>
                             <label class="inline-flex items-center cursor-pointer">
-                                <input type="checkbox" checked class="sr-only peer" disabled>
+                                <input type="checkbox" checked class="sr-only peer" disabled
+                                    id="functional-cookie-toggle">
                                 <div
                                     class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
@@ -379,6 +381,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
 .cookie-banner-close-btn-container,
 .cookie-banner-modal-header-text,
 .cookie-banner-modal-footer,
+.cookie-banner-btn-container,
 .cookie-banner-link {
     display: flex;
     align-items: center;
@@ -405,7 +408,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
 .cookie-banner-link{
     margin-left: 0; 
     font-weight: 600;
-    color: rgba(63, 131, 248, .5);
+    color: #7694cc;
 }
 
 .cookie-banner-link:hover{
@@ -413,7 +416,6 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
 }
 
 .cookie-banner-btn-container{
-    display: flex;
     gap: 5px;
     flex-wrap: wrap;
 }
@@ -637,21 +639,20 @@ function declineAllCookies() {
     saveCookies();
 }
 
-function handleBlockedResources() {
-    const blockedElements = document.querySelectorAll("[blocked-by]");
-
-    for (const el of blockedElements) {
-        const blockedBy = el.getAttribute("blocked-by");
-        if (getCookie(blockedBy) === "true") {
-            if (el.hasAttribute("data-type")) {
-                const element = document.createElement(el.dataset.type);
-
-                for (let i = 0; i < el.attributes.length; i++) {
-                    const attr = el.attributes[i];
-                    if (attr.name === "blocked-by") continue;
-                    element.setAttribute(attr.name.replace("blocked-", ""), attr.textContent);
+function handleBlockedResources(json) {
+    for (const cookie of cookies) {
+        const blockedElements = document.querySelectorAll(json.categories[cookie].blockedResources);
+        for (const el of blockedElements) {
+            if (getCookie(cookie) === "true") {
+                if (el.hasAttribute("data-type")) {
+                    const element = document.createElement(el.dataset.type);
+                    for (let i = 0; i < el.attributes.length; i++) {
+                        const attr = el.attributes[i];
+                        if (attr.name === "blocked-by") continue;
+                        element.setAttribute(attr.name.replace("blocked-", ""), attr.textContent);
+                    }
+                    el.replaceWith(element);
                 }
-                el.replaceWith(element);
             }
         }
     }
@@ -662,7 +663,7 @@ async function main() {
     initializeCookieBanner(json);
     setEventListeners();
     setLinkToDataPrivacy(json.link);
-    handleBlockedResources();
+    handleBlockedResources(json);
 }
 
 main();
@@ -677,47 +678,44 @@ main();
   ctx.registerSettingsPage("/cookie-banner", elementType_default(actionHandler));
   ctx.onRewrite(async (rewriter) => {
     const dataFromDb = await ctx.storage.getOne(db_id);
-    if (!dataFromDb)
+    const data = dataFromDb.data;
+    if (!data || !data.active)
       return;
-    if (dataFromDb.data.active) {
-      rewriter.on("[blocked-by]", {
+    console.log("DATA", data);
+    for (const cookie of cookies) {
+      rewriter.on(data.categories[cookie].blockedResources, {
         element(el) {
-          const data2 = dataFromDb.data;
-          if (data2.active) {
-            const blockedResource = el.getAttribute("blocked-by");
-            if (data2.categories[blockedResource].active) {
-              ctx.logger.info("Blocked", blockedResource, el.tagName);
-              switch (el.tagName.toLowerCase()) {
-                case "iframe": {
-                  const rewriter2 = new HTMLRewriter;
-                  let foundFirst = false;
-                  rewriter2.on("*:first-child", {
-                    element(el_) {
-                      if (foundFirst)
-                        return;
-                      for (const [key, value] of el.attributes) {
-                        if (key === "blocked-by") {
-                          el_.setAttribute(key, value);
-                          continue;
-                        }
-                        el_.setAttribute(`blocked-${key}`, value);
+          if (data.categories[cookie].active) {
+            switch (el.tagName.toLowerCase()) {
+              case "iframe": {
+                const rewriter2 = new HTMLRewriter;
+                let foundFirst = false;
+                rewriter2.on("*:first-child", {
+                  element(el_) {
+                    if (foundFirst)
+                      return;
+                    for (const [key, value] of el.attributes) {
+                      if (key === "blocked-by") {
+                        el_.setAttribute(key, value);
+                        continue;
                       }
-                      el_.setAttribute("data-type", "iframe");
-                      foundFirst = true;
+                      el_.setAttribute(`blocked-${key}`, value);
                     }
-                  });
-                  const replacer = rewriter2.transform(data2.html);
-                  el.replace(replacer, { html: true });
-                  break;
-                }
-                case "script":
-                  el.setAttribute("blocked-src", el.getAttribute("src"));
-                  el.setAttribute("data-type", "script");
-                  el.removeAttribute("src");
-                  break;
-                default:
-                  break;
+                    el_.setAttribute("data-type", "iframe");
+                    foundFirst = true;
+                  }
+                });
+                const replacer = rewriter2.transform(data.html);
+                el.replace(replacer, { html: true });
+                break;
               }
+              case "script":
+                el.setAttribute("blocked-src", el.getAttribute("src"));
+                el.setAttribute("data-type", "script");
+                el.removeAttribute("src");
+                break;
+              default:
+                break;
             }
           }
         }

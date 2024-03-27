@@ -23,6 +23,7 @@
 .cookie-banner-close-btn-container,
 .cookie-banner-modal-header-text,
 .cookie-banner-modal-footer,
+.cookie-banner-btn-container,
 .cookie-banner-link {
     display: flex;
     align-items: center;
@@ -49,7 +50,7 @@
 .cookie-banner-link{
     margin-left: 0; 
     font-weight: 600;
-    color: rgba(63, 131, 248, .5);
+    color: #7694cc;
 }
 
 .cookie-banner-link:hover{
@@ -57,7 +58,6 @@
 }
 
 .cookie-banner-btn-container{
-    display: flex;
     gap: 5px;
     flex-wrap: wrap;
 }
