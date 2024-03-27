@@ -78,42 +78,21 @@ function declineAllCookies() {
     saveCookies();
 }
 
-function reloadScript(el) {
-    const head = document.getElementsByTagName("head")[0];
-    const script = document.createElement("script");
-    script.src = el.getAttribute("data-src");
-    el.remove();
-    head.appendChild(script);
-}
-
 function handleBlockedResources() {
     const blockedElements = document.querySelectorAll("[blocked-by]");
 
     for (const el of blockedElements) {
         const blockedBy = el.getAttribute("blocked-by");
         if (getCookie(blockedBy) === "true") {
-            if (el.tagName.toLowerCase() === "script") {
-                reloadScript(el);
-            }
             if (el.hasAttribute("data-type")) {
-                switch (el.dataset.type) {
-                    case "iframe": {
-                        const iframe = document.createElement("iframe");
+                const element = document.createElement(el.dataset.type);
 
-                        for (let i = 0; i < el.attributes.length; i++) {
-                            const attr = el.attributes[i];
-                            if (attr.name === "blocked-by") continue;
-                            iframe.setAttribute(
-                                attr.name.replace("blocked-", ""),
-                                attr.textContent,
-                            );
-                        }
-                        el.replaceWith(iframe);
-                        break;
-                    }
-                    default:
-                        break;
+                for (let i = 0; i < el.attributes.length; i++) {
+                    const attr = el.attributes[i];
+                    if (attr.name === "blocked-by") continue;
+                    element.setAttribute(attr.name.replace("blocked-", ""), attr.textContent);
                 }
+                el.replaceWith(element);
             }
         }
     }

@@ -31,10 +31,10 @@ function elementType_default(actionHandler) {
           items: [
             {
               label: {
-                de: "Essentiell",
-                en: "Essential"
+                de: "Funktional",
+                en: "Functional"
               },
-              id: "essential",
+              id: "functional",
               icon: "i-tabler-tools",
               description: {
                 de: "Diese Cookies sind unerl\xE4sslich f\xFCr die Funktionalit\xE4t einer Website und erm\xF6glichen grundlegende Funktionen wie die Navigation und den Zugriff auf gesch\xFCtzte Bereiche",
@@ -44,7 +44,7 @@ function elementType_default(actionHandler) {
                 {
                   type: "text",
                   id: "blockedResources",
-                  defaultValue: "[blocked-by='essential']",
+                  defaultValue: "[blocked-by='functional']",
                   label: {
                     de: "Blockierte Ressourcen",
                     en: "Blocked resources"
@@ -183,15 +183,20 @@ function elementType_default(actionHandler) {
 }
 
 // index.js
-var cookiebanner_plugin_default = definePlugin((ctx) => {
+var cookiebanner_plugin_default = definePlugin(async (ctx) => {
+  const data = await ctx.storage.getAll();
+  let db_id = data.at(0)?.id;
+  if (data.length === 0) {
+    db_id = await ctx.storage.createOne();
+  }
   const actionHandler = ctx.registerHandler(["POST", "GET"], "/cookiebanner", async (req) => {
-    const fromDb = await ctx.storage.getOne(ctx.storage.db_id);
+    const fromDb = await ctx.storage.getOne(db_id);
     if (req.method === "GET") {
       return fromDb.data;
     }
     if (req.method === "POST") {
-      const { data } = await ctx.storage.updateOne(ctx.storage.db_id, req.body);
-      return data;
+      const { data: data2 } = await ctx.storage.updateOne(db_id, req.body);
+      return data2;
     }
     throw Error(`Method not allowed ${req.method}`);
   });
@@ -241,7 +246,7 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
         </div>
     </div>
     <div class="fixed bottom-[-48px] hover:bottom-[-12px] transition-all" id="cookie-settings-reminder">
-        <button data-modal-target="default-modal" data-modal-toggle="default-modal"
+        <button onclick="cookie_banner_settings.showModal()"
             class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-r-lg text-sm px-5 py-2.5 pb-6 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -260,8 +265,8 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
     </div>
 
     <!-- Cookie settings -->
-    <div id="default-modal" tabindex="-1" aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <dialog id="cookie_banner_settings"
+        class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-2xl max-h-full">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -272,7 +277,7 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
                     </h3>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-hide="default-modal">
+                        onclick="cookie_banner_settings.close()">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -294,12 +299,12 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
                                 f\xFCr die Funktionalit\xE4t einer Website und erm\xF6glichen grundlegende Funktionen wie die
                                 Navigation und den Zugriff auf gesch\xFCtzte Bereiche</p>
                             <label class="inline-flex items-center cursor-pointer">
-                                <input type="checkbox" checked class="sr-only peer" disabled>
+                                <input type="checkbox" checked class="sr-only peer">
                                 <div
                                     class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                 </div>
                                 <span
-                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Essenziell</span>
+                                    class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Funktional</span>
                             </label>
                         </div>
                         <div class="grid gap-x-4 grid-cols-3" id="performance-cookie-toggle">
@@ -350,14 +355,14 @@ var cookiebanner_plugin_default = definePlugin((ctx) => {
                 </div>
                 <!-- Modal footer -->
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                    <button id="save-cookies-settings" data-modal-hide="default-modal" type="button"
+                    <button id="save-cookies-settings" onclick="cookie_banner_settings.close()" type="button"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Speichern</button>
-                    <button data-modal-hide="default-modal" type="button"
+                    <button onclick="cookie_banner_settings.close()" type="button"
                         class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Abbrechen</button>
                 </div>
             </div>
         </div>
-    </div>
+    </dialog>
 </div>`,
     style: `.cookie-banner-toggle-btn{
     padding-top: 0.625rem;
@@ -451,39 +456,21 @@ function declineAllCookies() {
     saveCookies();
 }
 
-function reloadScript(el) {
-    const head = document.getElementsByTagName("head")[0];
-    const script = document.createElement("script");
-    script.src = el.getAttribute("data-src");
-    el.remove();
-    head.appendChild(script);
-}
-
 function handleBlockedResources() {
     const blockedElements = document.querySelectorAll("[blocked-by]");
 
     for (const el of blockedElements) {
         const blockedBy = el.getAttribute("blocked-by");
         if (getCookie(blockedBy) === "true") {
-            if (el.tagName.toLowerCase() === "script") {
-                reloadScript(el);
-            }
             if (el.hasAttribute("data-type")) {
-                console.log("HAS DATATYPE");
-                switch (el.dataset.type) {
-                    case "iframe": {
-                        console.log("IS IFRAME");
-                        const iframe = document.createElement("iframe");
-                        for (const [key, value] of Object.entries(el.attributes)) {
-                            iframe.setAttribute(key.replace("blocked-", ""), value);
-                            console.log("KEY:", key, "Value:", value);
-                        }
-                        el.replaceWith(iframe);
-                        break;
-                    }
-                    default:
-                        break;
+                const element = document.createElement(el.dataset.type);
+
+                for (let i = 0; i < el.attributes.length; i++) {
+                    const attr = el.attributes[i];
+                    if (attr.name === "blocked-by") continue;
+                    element.setAttribute(attr.name.replace("blocked-", ""), attr.textContent);
                 }
+                el.replaceWith(element);
             }
         }
     }
@@ -508,15 +495,15 @@ main();
   });
   ctx.registerSettingsPage("/cookie-banner", elementType_default(actionHandler));
   ctx.onRewrite(async (rewriter) => {
-    const dataFromDb = await ctx.storage.getOne(ctx.storage.db_id);
+    const dataFromDb = await ctx.storage.getOne(db_id);
     if (!dataFromDb)
       return;
     rewriter.on("[blocked-by]", {
       element(el) {
-        const data = dataFromDb.data;
-        if (data.active) {
+        const data2 = dataFromDb.data;
+        if (data2.active) {
           const blockedResource = el.getAttribute("blocked-by");
-          if (data.categories[blockedResource].active) {
+          if (data2.categories[blockedResource].active) {
             ctx.logger.info("Blocked", blockedResource, el.tagName);
             switch (el.tagName.toLowerCase()) {
               case "iframe": {
@@ -537,12 +524,13 @@ main();
                     foundFirst = true;
                   }
                 });
-                const replacer = rewriter2.transform(data.html);
+                const replacer = rewriter2.transform(data2.html);
                 el.replace(replacer, { html: true });
                 break;
               }
               case "script":
-                el.setAttribute("data-src", el.getAttribute("src"));
+                el.setAttribute("blocked-src", el.getAttribute("src"));
+                el.setAttribute("data-type", "script");
                 el.removeAttribute("src");
                 break;
               default:

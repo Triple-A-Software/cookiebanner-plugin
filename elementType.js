@@ -28,10 +28,10 @@ export default function (actionHandler) {
                     items: [
                         {
                             label: {
-                                de: "Essentiell",
-                                en: "Essential",
+                                de: "Funktional",
+                                en: "Functional",
                             },
-                            id: "essential",
+                            id: "functional",
                             icon: "i-tabler-tools",
                             description: {
                                 de: "Diese Cookies sind unerlässlich für die Funktionalität einer Website und ermöglichen grundlegende Funktionen wie die Navigation und den Zugriff auf geschützte Bereiche",
@@ -41,7 +41,7 @@ export default function (actionHandler) {
                                 {
                                     type: "text",
                                     id: "blockedResources",
-                                    defaultValue: "[blocked-by='essential']",
+                                    defaultValue: "[blocked-by='functional']",
                                     label: {
                                         de: "Blockierte Ressourcen",
                                         en: "Blocked resources",

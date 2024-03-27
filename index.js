@@ -3,16 +3,22 @@ import { $loadFileToString$ } from "@cms-local/plugin-interface/macros" with { t
 
 import elementType from "./elementType.js";
 
-export default definePlugin((ctx) => {
+export default definePlugin(async (ctx) => {
     //...
 
+    const data = await ctx.storage.getAll();
+    let db_id = data.at(0)?.id;
+    if (data.length === 0) {
+        db_id = await ctx.storage.createOne();
+    }
+
     const actionHandler = ctx.registerHandler(["POST", "GET"], "/cookiebanner", async (req) => {
-        const fromDb = await ctx.storage.getOne(ctx.storage.db_id);
+        const fromDb = await ctx.storage.getOne(db_id);
         if (req.method === "GET") {
             return fromDb.data;
         }
         if (req.method === "POST") {
-            const { data } = await ctx.storage.updateOne(ctx.storage.db_id, req.body);
+            const { data } = await ctx.storage.updateOne(db_id, req.body);
             return data;
         }
         throw Error(`Method not allowed ${req.method}`);
@@ -36,7 +42,7 @@ export default definePlugin((ctx) => {
     ctx.registerSettingsPage("/cookie-banner", elementType(actionHandler));
 
     ctx.onRewrite(async (rewriter) => {
-        const dataFromDb = await ctx.storage.getOne(ctx.storage.db_id);
+        const dataFromDb = await ctx.storage.getOne(db_id);
         if (!dataFromDb) return;
 
         rewriter.on("[blocked-by]", {
@@ -48,6 +54,7 @@ export default definePlugin((ctx) => {
                         ctx.logger.info("Blocked", blockedResource, el.tagName);
 
                         switch (el.tagName.toLowerCase()) {
+                            // Add other Elements Here
                             case "iframe": {
                                 const rewriter = new HTMLRewriter();
                                 let foundFirst = false;
@@ -70,7 +77,8 @@ export default definePlugin((ctx) => {
                                 break;
                             }
                             case "script":
-                                el.setAttribute("data-src", el.getAttribute("src"));
+                                el.setAttribute("blocked-src", el.getAttribute("src"));
+                                el.setAttribute("data-type", "script");
                                 el.removeAttribute("src");
                                 break;
                             default:
