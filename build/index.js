@@ -224,11 +224,9 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
             </p>
         </div>
         <div class="cookie-banner-btn-container">
-            <button onclick="cookie_banner_settings.showModal()" id="acceptAllCookies" type="button"
-                class="cookie-banner-btn bg-green-700 hover:bg-green-800">Alle
+            <button id="acceptAllCookies" type="button" class="cookie-banner-btn bg-green-700 hover:bg-green-800">Alle
                 akzeptieren</button>
-            <button onclick="cookie_banner_settings.showModal()" id="declineAllCookies" type="button"
-                class="cookie-banner-btn bg-red-700 hover:bg-red-800">Alle
+            <button id="declineAllCookies" type="button" class="cookie-banner-btn bg-red-700 hover:bg-red-800">Alle
                 ablehnen</button>
             <button onclick="cookie_banner_settings.showModal()" type="button"
                 class="cookie-banner-btn bg-gray-800 hover:bg-gray-900">Cookies
@@ -295,9 +293,8 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
                                 unerl\xE4sslich
                                 f\xFCr die Funktionalit\xE4t einer Website und erm\xF6glichen grundlegende Funktionen wie die
                                 Navigation und den Zugriff auf gesch\xFCtzte Bereiche</p>
-                            <label class="inline-flex items-center cursor-pointer">
-                                <input type="checkbox" checked class="sr-only peer" disabled
-                                    id="functional-cookie-toggle">
+                            <label class="inline-flex items-center cursor-pointer" id="functional-cookie-toggle">
+                                <input type="checkbox" checked class="sr-only peer" disabled id="functional-cookie">
                                 <div
                                     class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
@@ -562,108 +559,111 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
     script: `const cookies = ["performance", "statistic", "marketing", "functional"];
 
 async function fetchCookieBanner() {
-    const res = await fetch("/api/plugins/cookiebanner-plugin/cookiebanner", {
-        method: "GET",
-    });
-    return await res.json();
+  const res = await fetch("/api/plugins/cookiebanner-plugin/cookiebanner", {
+    method: "GET",
+  });
+  return await res.json();
 }
 
 function setLinkToDataPrivacy(link) {
-    document.getElementById("link-to-data-privacy").setAttribute("href", link);
+  document.getElementById("link-to-data-privacy").setAttribute("href", link);
 }
 
 function getCookie(cname) {
-    const name = \`\${cname}=\`;
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const ca = decodedCookie.split(";");
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === " ") {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) {
-            return c.substring(name.length, c.length);
-        }
+  const name = \`\${cname}=\`;
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === " ") {
+      c = c.substring(1);
     }
-    return "";
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
 }
 
 function initializeCookieBanner(json) {
-    if (!getCookie("showCookiebanner")) {
-        document.getElementById("cookie-bottom-banner").className =
-            "fixed bottom-0 start-0 z-50 md:flex-wrap flex justify-between w-full p-4 border-t border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600";
+  if (!getCookie("showCookiebanner")) {
+    document.getElementById("cookie-bottom-banner").className =
+      "fixed bottom-0 start-0 z-50 md:flex-wrap flex justify-between w-full p-4 border-t border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600";
+  }
+  if (json.active) {
+    document.getElementById("cookie-banner-container").className = "";
+    for (const cookie of cookies) {
+      if (!json.categories[cookie].active) {
+        document.getElementById(\`\${cookie}-cookie-toggle\`).style.display = "none";
+      }
     }
-    if (json.active) {
-        document.getElementById("cookie-banner-container").className = "";
-        for (const cookie of cookies) {
-            if (!json.categories[cookie].active) {
-                document.getElementById(\`\${cookie}-cookie-toggle\`).style.display = "none";
-            }
-        }
-    }
+  }
 }
 
 function setEventListeners() {
-    document.getElementById("acceptAllCookies").addEventListener("click", acceptAllCookies);
-    document.getElementById("declineAllCookies").addEventListener("click", declineAllCookies);
+  document.getElementById("acceptAllCookies").addEventListener("click", acceptAllCookies);
+  document.getElementById("declineAllCookies").addEventListener("click", declineAllCookies);
 
-    for (const cookie of cookies) {
-        document.getElementById(\`\${cookie}-cookie\`).addEventListener("change", setCookie);
-    }
-    document.getElementById("save-cookies-settings").addEventListener("click", saveCookies);
+  for (const cookie of cookies) {
+    document.getElementById(\`\${cookie}-cookie\`).addEventListener("change", setCookie);
+  }
+  document.getElementById("save-cookies-settings").addEventListener("click", saveCookies);
 }
 
 function setCookie(e) {
-    const cookieName = e.target.id.replace("-cookie", "");
-    document.cookie = \`\${cookieName}=\${e.target.checked}; max-age=2592000; path=/; SameSite=Strict\`;
+  const cookieName = e.target.id.replace("-cookie", "");
+  document.cookie = \`\${cookieName}=\${e.target.checked}; max-age=2592000; path=/; SameSite=Strict\`;
 }
 
 function saveCookies() {
-    document.cookie = "showCookiebanner=false; max-age=2592000; path=/; SameSite=Strict";
-    location.reload();
+  document.cookie = "showCookiebanner=false; max-age=2592000; path=/; SameSite=Strict";
+  location.reload();
 }
 
 function acceptAllCookies() {
-    for (const cookie of cookies) {
-        document.cookie = \`\${cookie}=true; max-age=2592000; path=/; SameSite=Strict\`;
-    }
-    document.getElementById("cookie-bottom-banner").className = "hidden";
-    saveCookies();
+  for (const cookie of cookies) {
+    document.cookie = \`\${cookie}=true; max-age=2592000; path=/; SameSite=Strict\`;
+  }
+  document.getElementById("cookie-bottom-banner").className = "hidden";
+  saveCookies();
 }
 
 function declineAllCookies() {
-    for (const cookie of cookies) {
-        document.cookie = \`\${cookie}=false; max-age=2592000; path=/; SameSite=Strict\`;
-    }
-    document.getElementById("cookie-bottom-banner").className = "hidden";
-    saveCookies();
+  for (const cookie of cookies) {
+    document.cookie = \`\${cookie}=false; max-age=2592000; path=/; SameSite=Strict\`;
+  }
+  document.getElementById("cookie-bottom-banner").className = "hidden";
+  saveCookies();
 }
 
 function handleBlockedResources(json) {
-    for (const cookie of cookies) {
-        const blockedElements = document.querySelectorAll(json.categories[cookie].blockedResources);
-        for (const el of blockedElements) {
-            if (getCookie(cookie) === "true") {
-                if (el.hasAttribute("data-type")) {
-                    const element = document.createElement(el.dataset.type);
-                    for (let i = 0; i < el.attributes.length; i++) {
-                        const attr = el.attributes[i];
-                        if (attr.name === "blocked-by") continue;
-                        element.setAttribute(attr.name.replace("blocked-", ""), attr.textContent);
-                    }
-                    el.replaceWith(element);
-                }
-            }
-        }
+  for (const cookie of cookies) {
+    let blockedElements = [];
+    if (json.categories[cookie].blockedResources) {
+      blockedElements = document.querySelectorAll(json.categories[cookie].blockedResources);
     }
+    for (const el of blockedElements) {
+      if (getCookie(cookie) === "true") {
+        if (el.hasAttribute("data-type")) {
+          const element = document.createElement(el.dataset.type);
+          for (let i = 0; i < el.attributes.length; i++) {
+            const attr = el.attributes[i];
+            if (attr.name === "blocked-by") continue;
+            element.setAttribute(attr.name.replace("blocked-", ""), attr.textContent);
+          }
+          el.replaceWith(element);
+        }
+      }
+    }
+  }
 }
 
 async function main() {
-    const json = await fetchCookieBanner();
-    initializeCookieBanner(json);
-    setEventListeners();
-    setLinkToDataPrivacy(json.link);
-    handleBlockedResources(json);
+  const json = await fetchCookieBanner();
+  initializeCookieBanner(json);
+  setEventListeners();
+  setLinkToDataPrivacy(json.link);
+  handleBlockedResources(json);
 }
 
 main();
@@ -687,10 +687,19 @@ main();
         element(el) {
           if (data.categories[cookie].active) {
             switch (el.tagName.toLowerCase()) {
-              case "iframe": {
+              case "script":
+                el.setAttribute("blocked-src", el.getAttribute("src"));
+                el.setAttribute("data-type", "script");
+                el.removeAttribute("src");
+                break;
+              default: {
                 const rewriter2 = new HTMLRewriter;
                 let foundFirst = false;
+                let content = "no Conent";
                 rewriter2.on("*:first-child", {
+                  text(txt) {
+                    content = txt.text;
+                  },
                   element(el_) {
                     if (foundFirst)
                       return;
@@ -701,7 +710,8 @@ main();
                       }
                       el_.setAttribute(`blocked-${key}`, value);
                     }
-                    el_.setAttribute("data-type", "iframe");
+                    el_.setAttribute("data-type", el.tagName);
+                    el_.setAttribute("data-content", content);
                     foundFirst = true;
                   }
                 });
@@ -709,13 +719,6 @@ main();
                 el.replace(replacer, { html: true });
                 break;
               }
-              case "script":
-                el.setAttribute("blocked-src", el.getAttribute("src"));
-                el.setAttribute("data-type", "script");
-                el.removeAttribute("src");
-                break;
-              default:
-                break;
             }
           }
         }
