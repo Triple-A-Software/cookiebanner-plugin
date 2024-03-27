@@ -5,7 +5,7 @@
                 <span>Diese Seite verwendet Cookies, um Ihre Erfahrung zu verbessern. Durch die Nutzung der Website
                     stimmen Sie der Verwendung von Cookies zu. Sie können die Cookie-Einstellungen jedoch auch anpassen,
                     wenn Sie möchten.
-                    <a href="/data-privacy#cookie"
+                    <a href="/data-privacy#cookie" id="link-to-data-privacy"
                         class="flex items-center ms-0 text-sm font-medium text-blue-600 md:ms-1 md:inline-flex dark:text-blue-500 hover:underline">
                         Mehr erfahren
                         <svg class="w-3 h-3 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -88,11 +88,10 @@
                         Browsing-Erlebnis zu optimieren.
                     </p>
                     <div class="grid gap-4">
-                        <div class="flex">
-                            <p class="italic text-gray-900 dark:text-white border-t-1">Diese Cookies sind unerlässlich
-                                für
-                                die
-                                Funktionalität einer Website und ermöglichen grundlegende Funktionen wie die
+                        <div class="grid gap-x-4 grid-cols-3">
+                            <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies sind
+                                unerlässlich
+                                für die Funktionalität einer Website und ermöglichen grundlegende Funktionen wie die
                                 Navigation und den Zugriff auf geschützte Bereiche</p>
                             <label class="inline-flex items-center cursor-pointer">
                                 <input type="checkbox" checked class="sr-only peer" disabled>
@@ -105,9 +104,8 @@
                         </div>
                         <div class="grid gap-x-4 grid-cols-3" id="performance-cookie-toggle">
                             <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies sammeln
-                                Informationen
-                                darüber, wie
-                                Besucher eine Website nutzen, um deren Leistung und Funktionalität zu
+                                Informationen darüber, wie Besucher eine Website nutzen, um deren Leistung und
+                                Funktionalität zu
                                 verbessern, indem sie beispielsweise Seitenaufrufe und Ladezeiten verfolgen.</p>
                             <label class="inline-flex items-center cursor-pointer" id="performance-cookie-toggle">
                                 <input type="checkbox" id="performance-cookie" value="" class="sr-only peer">
@@ -118,11 +116,10 @@
                                     class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Performance</span>
                             </label>
                         </div>
-                        <div class="flex" id="marketing-cookie-toggle">
-                            <p class="italic text-gray-900 dark:text-white border-t-1">Diese Cookies werden verwendet,
-                                um
-                                das
-                                Nutzerverhalten über verschiedene Websites hinweg zu verfolgen und Profile zu
+                        <div class="grid gap-x-4 grid-cols-3" id="marketing-cookie-toggle">
+                            <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies werden
+                                verwendet,
+                                um das Nutzerverhalten über verschiedene Websites hinweg zu verfolgen und Profile zu
                                 erstellen, die dann zur gezielten Schaltung von Anzeigen und zur Personalisierung von
                                 Inhalten verwendet werden können.</p>
                             <label class="inline-flex items-center cursor-pointer">
@@ -133,8 +130,9 @@
                                 <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Marketing</span>
                             </label>
                         </div>
-                        <div class="flex" id="statistic-cookie-toggle">
-                            <p class="italic text-gray-900 dark:text-white border-t-1">Diese Cookies sammeln anonyme
+                        <div class="grid gap-x-4 grid-cols-3" id="statistic-cookie-toggle">
+                            <p class="italic text-gray-900 dark:text-white border-t-1 col-span-2">Diese Cookies sammeln
+                                anonyme
                                 Daten
                                 darüber, wie
                                 Besucher eine Website nutzen, um Einblicke in das Nutzerverhalten zu

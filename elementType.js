@@ -65,6 +65,7 @@ export default function (actionHandler) {
                                 {
                                     type: "checkbox",
                                     id: "active",
+                                    defaultValue: false,
                                     label: {
                                         de: "aktiviert",
                                         en: "active",
@@ -87,7 +88,6 @@ export default function (actionHandler) {
                                 en: "Marketing",
                             },
                             icon: "i-tabler-building-store",
-                            defaultValue: false,
                             id: "marketing",
                             description: {
                                 de: "Diese Cookies werden verwendet, um das Nutzerverhalten über verschiedene Websites hinweg zu verfolgen und Profile zu erstellen, die dann zur gezielten Schaltung von Anzeigen und zur Personalisierung von Inhalten verwendet werden können.",
@@ -97,6 +97,7 @@ export default function (actionHandler) {
                                 {
                                     type: "checkbox",
                                     id: "active",
+                                    defaultValue: false,
                                     label: {
                                         de: "aktiviert",
                                         en: "active",
@@ -119,7 +120,6 @@ export default function (actionHandler) {
                                 en: "Statistic",
                             },
                             id: "statistic",
-                            defaultValue: false,
                             icon: "i-tabler-chart-area-line",
                             description: {
                                 de: "Diese Cookies sammeln anonyme Daten darüber, wie Besucher eine Website nutzen, um Einblicke in das Nutzerverhalten zu gewinnen und die Website entsprechend zu optimieren und zu verbessern.",
@@ -129,6 +129,7 @@ export default function (actionHandler) {
                                 {
                                     type: "checkbox",
                                     id: "active",
+                                    defaultValue: false,
                                     label: {
                                         de: "aktiviert",
                                         en: "active",
@@ -148,9 +149,19 @@ export default function (actionHandler) {
                     ],
                 },
                 {
+                    type: "text",
+                    id: "link",
+                    defaultValue: "/data-privacy#cookie",
+                    label: {
+                        de: "Link zum Datenschutz",
+                        en: "Link to Data privacy",
+                    },
+                },
+                {
                     type: "code",
                     id: "html",
                     language: "html",
+                    defaultValue: "<p>Blocked</p>",
                     label: {
                         de: "Cookiebanner Block HTML",
                         en: "Cookiebanner Block HTML",

@@ -7,16 +7,20 @@ async function fetchCookieBanner() {
     return await res.json();
 }
 
+function setLinkToDataPrivacy(link) {
+    document.getElementById("link-to-data-privacy").setAttribute("href", link);
+}
+
 function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(";");
+    const name = `${cname}=`;
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(";");
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
-        while (c.charAt(0) == " ") {
+        while (c.charAt(0) === " ") {
             c = c.substring(1);
         }
-        if (c.indexOf(name) == 0) {
+        if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
         }
     }
@@ -30,11 +34,11 @@ function initializeCookieBanner(json) {
     }
     if (json.active) {
         document.getElementById("cookie-banner-container").className = "";
-        cookies.forEach((cookie) => {
+        for (const cookie of cookies) {
             if (!json.categories[cookie].active) {
-                document.getElementById(cookie + "-cookie-toggle").style.display = "none";
+                document.getElementById(`${cookie}-cookie-toggle`).style.display = "none";
             }
-        });
+        }
     }
 }
 
@@ -42,9 +46,9 @@ function setEventListeners() {
     document.getElementById("acceptAllCookies").addEventListener("click", acceptAllCookies);
     document.getElementById("declineAllCookies").addEventListener("click", declineAllCookies);
 
-    cookies.forEach((cookie) => {
-        document.getElementById(cookie + "-cookie").addEventListener("change", setCookie);
-    });
+    for (const cookie of cookies) {
+        document.getElementById(`${cookie}-cookie`).addEventListener("change", setCookie);
+    }
     document.getElementById("save-cookies-settings").addEventListener("click", saveCookies);
 }
 
@@ -59,30 +63,59 @@ function saveCookies() {
 }
 
 function acceptAllCookies() {
-    cookies.forEach((cookie) => {
+    for (const cookie of cookies) {
         document.cookie = `${cookie}=true; max-age=2592000; path=/; SameSite=Strict`;
-    });
+    }
     document.getElementById("cookie-bottom-banner").className = "hidden";
     saveCookies();
 }
 
 function declineAllCookies() {
-    cookies.forEach((cookie) => {
+    for (const cookie of cookies) {
         document.cookie = `${cookie}=false; max-age=2592000; path=/; SameSite=Strict`;
-    });
+    }
     document.getElementById("cookie-bottom-banner").className = "hidden";
     saveCookies();
 }
 
-function blockResources(json) {
-    if (json.active) {
-        const elementsWithBlockedBy = document.querySelectorAll("[blocked-by]");
-        elementsWithBlockedBy.forEach((element) => {
-            const blockedByValue = element.getAttribute("blocked-by");
-            if (json.categories[blockedByValue].active && getCookie(blockedByValue) !== "true") {
-                element.outerHTML = json.html;
+function reloadScript(el) {
+    const head = document.getElementsByTagName("head")[0];
+    const script = document.createElement("script");
+    script.src = el.getAttribute("data-src");
+    el.remove();
+    head.appendChild(script);
+}
+
+function handleBlockedResources() {
+    const blockedElements = document.querySelectorAll("[blocked-by]");
+
+    for (const el of blockedElements) {
+        const blockedBy = el.getAttribute("blocked-by");
+        if (getCookie(blockedBy) === "true") {
+            if (el.tagName.toLowerCase() === "script") {
+                reloadScript(el);
             }
-        });
+            if (el.hasAttribute("data-type")) {
+                switch (el.dataset.type) {
+                    case "iframe": {
+                        const iframe = document.createElement("iframe");
+
+                        for (let i = 0; i < el.attributes.length; i++) {
+                            const attr = el.attributes[i];
+                            if (attr.name === "blocked-by") continue;
+                            iframe.setAttribute(
+                                attr.name.replace("blocked-", ""),
+                                attr.textContent,
+                            );
+                        }
+                        el.replaceWith(iframe);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }
 
@@ -90,7 +123,8 @@ async function main() {
     const json = await fetchCookieBanner();
     initializeCookieBanner(json);
     setEventListeners();
-    blockResources(json);
+    setLinkToDataPrivacy(json.link);
+    handleBlockedResources();
 }
 
 main();
