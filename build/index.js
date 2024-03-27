@@ -187,8 +187,9 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
   const data = await ctx.storage.getAll();
   let db_id = data.at(0)?.id;
   if (data.length === 0) {
-    db_id = await ctx.storage.createOne();
+    db_id = await ctx.storage.createOne().id;
   }
+  console.log("ID", db_id);
   const actionHandler = ctx.registerHandler(["POST", "GET"], "/cookiebanner", async (req) => {
     const fromDb = await ctx.storage.getOne(db_id);
     if (req.method === "GET") {
@@ -222,14 +223,14 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
             </p>
         </div>
         <div class="cookie-banner-btn-container">
-            <button data-dismiss-target="#cookie-bottom-banner" id="acceptAllCookies" type="button"
-                class="cookie-banner-btn bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300">Alle
+            <button onclick="cookie_banner_settings.showModal()" id="acceptAllCookies" type="button"
+                class="cookie-banner-btn bg-green-700 hover:bg-green-800">Alle
                 akzeptieren</button>
-            <button data-dismiss-target="#cookie-bottom-banner" id="declineAllCookies" type="button"
-                class="cookie-banner-btn bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300">Alle
+            <button onclick="cookie_banner_settings.showModal()" id="declineAllCookies" type="button"
+                class="cookie-banner-btn bg-red-700 hover:bg-red-800">Alle
                 ablehnen</button>
-            <button data-modal-target="default-modal" data-modal-toggle="default-modal" type="button"
-                class="cookie-banner-btn bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:ring-gray-300">Cookies
+            <button onclick="cookie_banner_settings.showModal()" type="button"
+                class="cookie-banner-btn bg-gray-800 hover:bg-gray-900">Cookies
                 verwalten</button>
         </div>
         <div class="cookie-banner-close-btn-container">
@@ -269,7 +270,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
             <div class="cookie-banner-modal-header">
                 <!-- Modal header -->
                 <div class="cookie-banner-modal-header-text">
-                    <h3>
+                    <h3 class="cookie-banner-header-3">
                         Cookie Einstellungen
                     </h3>
                     <button type="button" class="cookie-banner-close-btn" onclick="cookie_banner_settings.close()">
@@ -296,7 +297,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
                             <label class="inline-flex items-center cursor-pointer">
                                 <input type="checkbox" checked class="sr-only peer" disabled>
                                 <div
-                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
+                                    class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
                                 <span class="cookie-banner-modal-body-span">Funktional</span>
                             </label>
@@ -309,7 +310,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
                             <label class="cookie-banner-modal-body-btn-label" id="performance-cookie-toggle">
                                 <input type="checkbox" id="performance-cookie" value="" class="sr-only peer">
                                 <div
-                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
+                                    class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
                                 <span class="cookie-banner-modal-body-span">Performance</span>
                             </label>
@@ -322,7 +323,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
                             <label class="cookie-banner-modal-body-btn-label">
                                 <input type="checkbox" id="marketing-cookie" value="" class="sr-only peer">
                                 <div
-                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
+                                    class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
                                 <span class="cookie-banner-modal-body-span">Marketing</span>
                             </label>
@@ -335,7 +336,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
                             <label class="cookie-banner-modal-body-btn-label" id="statistic-cookie-toggle">
                                 <input type="checkbox" id="statistic-cookie" value="" class="sr-only peer">
                                 <div
-                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
+                                    class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
                                 <span class="cookie-banner-modal-body-span">Statistics</span>
                             </label>
@@ -345,15 +346,15 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
                 <!-- Modal footer -->
                 <div class="cookie-banner-modal-footer">
                     <button id="save-cookies-settings" onclick="cookie_banner_settings.close()" type="button"
-                        class="cookie-banner-btn bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">Speichern</button>
+                        class="cookie-banner-btn bg-blue-700 hover:bg-blue-800">Speichern</button>
                     <button onclick="cookie_banner_settings.close()" type="button"
-                        class="cookie-banner-btn focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Abbrechen</button>
+                        class="cookie-banner-btn bg-gray-700 hover:bg-gray-800">Abbrechen</button>
                 </div>
             </div>
         </div>
     </dialog>
 </div>`,
-    style: `h3{
+    style: `.cookie-banner-header-3{
     font-size: 1.25rem;
     line-height: 1.75rem;
     font-weight: 600;
@@ -442,20 +443,20 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
 .cookie-banner-spy-container{
     position: fixed;
     bottom: -48px;
-    transition: all;
+    transition: all .5s;
 }
 
 .cookie-banner-spy-container:hover{
-    bottom: -12px;
+    bottom: -15px;
 }
 
 .cookie-banner-spy{
     color: white;
-    background: lightgray;
+    background: rgb(23 37 84);
     font-weight: 600;
-    border-radius: 25px;
+    border-radius: 10px 10px 0 0;
     padding: .625rem 1.25rem;
-    padding-bottom: 2rem !important;
+    padding-bottom: 1.7rem !important;
 }
 
 .cookie-banner-modal-container{
@@ -469,7 +470,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
     z-index: 50;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 70%;
 }
 
 .cookie-banner-modal-content{
@@ -497,10 +498,12 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
 
 .cookie-banner-modal-body-text{
     font-size: 1rem;
-    color: lightgray;
+    color: grey;
+    padding-bottom: 1rem;
 }
 
-.cookie-banner-modal-body-container, .cookie-banner-modal-body-btn-container{
+.cookie-banner-modal-body-container, 
+.cookie-banner-modal-body-btn-container{
     display: grid;
     gap: 1rem;
 }
@@ -513,6 +516,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
     font-style: italic;
     grid-column: span 2 / span 2;
     border-top: lightgray solid 1px;
+    padding-top: 1rem;
 }
 
 .cookie-banner-modal-body-btn-label{
@@ -523,11 +527,10 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
 
 .cookie-banner-toogle{
     position: relative;
-    border-radius: 9999px;
+    border-radius: 25px;
     width: 2.75rem;
     height: 1.5rem;
     background-color: #E5E7EB;
-    border-radius: 100%;
 }
 
 .cookie-banner-toogle::after {
@@ -540,7 +543,7 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
    border-radius: 100%;
    width: 1.25rem;
    height: 1.25rem;
-   transition: all;
+   transition: all .5s;
 }
 
 .cookie-banner-modal-body-span{
@@ -552,7 +555,6 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
 .cookie-banner-modal-footer{
     padding: 1rem;
     border: lightgray solid 1px;
-    border-bottom-left-radius: 25px;
 }
 `,
     script: `const cookies = ["performance", "statistic", "marketing", "functional"];
@@ -677,48 +679,50 @@ main();
     const dataFromDb = await ctx.storage.getOne(db_id);
     if (!dataFromDb)
       return;
-    rewriter.on("[blocked-by]", {
-      element(el) {
-        const data2 = dataFromDb.data;
-        if (data2.active) {
-          const blockedResource = el.getAttribute("blocked-by");
-          if (data2.categories[blockedResource].active) {
-            ctx.logger.info("Blocked", blockedResource, el.tagName);
-            switch (el.tagName.toLowerCase()) {
-              case "iframe": {
-                const rewriter2 = new HTMLRewriter;
-                let foundFirst = false;
-                rewriter2.on("*:first-child", {
-                  element(el_) {
-                    if (foundFirst)
-                      return;
-                    for (const [key, value] of el.attributes) {
-                      if (key === "blocked-by") {
-                        el_.setAttribute(key, value);
-                        continue;
+    if (dataFromDb.data.active) {
+      rewriter.on("[blocked-by]", {
+        element(el) {
+          const data2 = dataFromDb.data;
+          if (data2.active) {
+            const blockedResource = el.getAttribute("blocked-by");
+            if (data2.categories[blockedResource].active) {
+              ctx.logger.info("Blocked", blockedResource, el.tagName);
+              switch (el.tagName.toLowerCase()) {
+                case "iframe": {
+                  const rewriter2 = new HTMLRewriter;
+                  let foundFirst = false;
+                  rewriter2.on("*:first-child", {
+                    element(el_) {
+                      if (foundFirst)
+                        return;
+                      for (const [key, value] of el.attributes) {
+                        if (key === "blocked-by") {
+                          el_.setAttribute(key, value);
+                          continue;
+                        }
+                        el_.setAttribute(`blocked-${key}`, value);
                       }
-                      el_.setAttribute(`blocked-${key}`, value);
+                      el_.setAttribute("data-type", "iframe");
+                      foundFirst = true;
                     }
-                    el_.setAttribute("data-type", "iframe");
-                    foundFirst = true;
-                  }
-                });
-                const replacer = rewriter2.transform(data2.html);
-                el.replace(replacer, { html: true });
-                break;
+                  });
+                  const replacer = rewriter2.transform(data2.html);
+                  el.replace(replacer, { html: true });
+                  break;
+                }
+                case "script":
+                  el.setAttribute("blocked-src", el.getAttribute("src"));
+                  el.setAttribute("data-type", "script");
+                  el.removeAttribute("src");
+                  break;
+                default:
+                  break;
               }
-              case "script":
-                el.setAttribute("blocked-src", el.getAttribute("src"));
-                el.setAttribute("data-type", "script");
-                el.removeAttribute("src");
-                break;
-              default:
-                break;
             }
           }
         }
-      }
-    });
+      });
+    }
   });
 });
 export {

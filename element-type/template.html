@@ -17,14 +17,14 @@
             </p>
         </div>
         <div class="cookie-banner-btn-container">
-            <button data-dismiss-target="#cookie-bottom-banner" id="acceptAllCookies" type="button"
-                class="cookie-banner-btn bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300">Alle
+            <button onclick="cookie_banner_settings.showModal()" id="acceptAllCookies" type="button"
+                class="cookie-banner-btn bg-green-700 hover:bg-green-800">Alle
                 akzeptieren</button>
-            <button data-dismiss-target="#cookie-bottom-banner" id="declineAllCookies" type="button"
-                class="cookie-banner-btn bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300">Alle
+            <button onclick="cookie_banner_settings.showModal()" id="declineAllCookies" type="button"
+                class="cookie-banner-btn bg-red-700 hover:bg-red-800">Alle
                 ablehnen</button>
-            <button data-modal-target="default-modal" data-modal-toggle="default-modal" type="button"
-                class="cookie-banner-btn bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:ring-gray-300">Cookies
+            <button onclick="cookie_banner_settings.showModal()" type="button"
+                class="cookie-banner-btn bg-gray-800 hover:bg-gray-900">Cookies
                 verwalten</button>
         </div>
         <div class="cookie-banner-close-btn-container">
@@ -64,7 +64,7 @@
             <div class="cookie-banner-modal-header">
                 <!-- Modal header -->
                 <div class="cookie-banner-modal-header-text">
-                    <h3>
+                    <h3 class="cookie-banner-header-3">
                         Cookie Einstellungen
                     </h3>
                     <button type="button" class="cookie-banner-close-btn" onclick="cookie_banner_settings.close()">
@@ -91,7 +91,7 @@
                             <label class="inline-flex items-center cursor-pointer">
                                 <input type="checkbox" checked class="sr-only peer" disabled>
                                 <div
-                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
+                                    class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
                                 <span class="cookie-banner-modal-body-span">Funktional</span>
                             </label>
@@ -104,7 +104,7 @@
                             <label class="cookie-banner-modal-body-btn-label" id="performance-cookie-toggle">
                                 <input type="checkbox" id="performance-cookie" value="" class="sr-only peer">
                                 <div
-                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
+                                    class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
                                 <span class="cookie-banner-modal-body-span">Performance</span>
                             </label>
@@ -117,7 +117,7 @@
                             <label class="cookie-banner-modal-body-btn-label">
                                 <input type="checkbox" id="marketing-cookie" value="" class="sr-only peer">
                                 <div
-                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
+                                    class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
                                 <span class="cookie-banner-modal-body-span">Marketing</span>
                             </label>
@@ -130,7 +130,7 @@
                             <label class="cookie-banner-modal-body-btn-label" id="statistic-cookie-toggle">
                                 <input type="checkbox" id="statistic-cookie" value="" class="sr-only peer">
                                 <div
-                                    class="cookie-banner-toogle peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white dark:border-gray-600 peer-checked:bg-gray-600">
+                                    class="cookie-banner-toogle peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600">
                                 </div>
                                 <span class="cookie-banner-modal-body-span">Statistics</span>
                             </label>
@@ -140,9 +140,9 @@
                 <!-- Modal footer -->
                 <div class="cookie-banner-modal-footer">
                     <button id="save-cookies-settings" onclick="cookie_banner_settings.close()" type="button"
-                        class="cookie-banner-btn bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">Speichern</button>
+                        class="cookie-banner-btn bg-blue-700 hover:bg-blue-800">Speichern</button>
                     <button onclick="cookie_banner_settings.close()" type="button"
-                        class="cookie-banner-btn focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Abbrechen</button>
+                        class="cookie-banner-btn bg-gray-700 hover:bg-gray-800">Abbrechen</button>
                 </div>
             </div>
         </div>

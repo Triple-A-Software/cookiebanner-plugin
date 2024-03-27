@@ -1,4 +1,4 @@
-h3{
+.cookie-banner-header-3{
     font-size: 1.25rem;
     line-height: 1.75rem;
     font-weight: 600;
@@ -87,20 +87,20 @@ h3{
 .cookie-banner-spy-container{
     position: fixed;
     bottom: -48px;
-    transition: all;
+    transition: all .5s;
 }
 
 .cookie-banner-spy-container:hover{
-    bottom: -12px;
+    bottom: -15px;
 }
 
 .cookie-banner-spy{
     color: white;
-    background: lightgray;
+    background: rgb(23 37 84);
     font-weight: 600;
-    border-radius: 25px;
+    border-radius: 10px 10px 0 0;
     padding: .625rem 1.25rem;
-    padding-bottom: 2rem !important;
+    padding-bottom: 1.7rem !important;
 }
 
 .cookie-banner-modal-container{
@@ -114,7 +114,7 @@ h3{
     z-index: 50;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 70%;
 }
 
 .cookie-banner-modal-content{
@@ -142,10 +142,12 @@ h3{
 
 .cookie-banner-modal-body-text{
     font-size: 1rem;
-    color: lightgray;
+    color: grey;
+    padding-bottom: 1rem;
 }
 
-.cookie-banner-modal-body-container, .cookie-banner-modal-body-btn-container{
+.cookie-banner-modal-body-container, 
+.cookie-banner-modal-body-btn-container{
     display: grid;
     gap: 1rem;
 }
@@ -158,6 +160,7 @@ h3{
     font-style: italic;
     grid-column: span 2 / span 2;
     border-top: lightgray solid 1px;
+    padding-top: 1rem;
 }
 
 .cookie-banner-modal-body-btn-label{
@@ -168,11 +171,10 @@ h3{
 
 .cookie-banner-toogle{
     position: relative;
-    border-radius: 9999px;
+    border-radius: 25px;
     width: 2.75rem;
     height: 1.5rem;
     background-color: #E5E7EB;
-    border-radius: 100%;
 }
 
 .cookie-banner-toogle::after {
@@ -185,7 +187,7 @@ h3{
    border-radius: 100%;
    width: 1.25rem;
    height: 1.25rem;
-   transition: all;
+   transition: all .5s;
 }
 
 .cookie-banner-modal-body-span{
@@ -197,5 +199,4 @@ h3{
 .cookie-banner-modal-footer{
     padding: 1rem;
     border: lightgray solid 1px;
-    border-bottom-left-radius: 25px;
 }
