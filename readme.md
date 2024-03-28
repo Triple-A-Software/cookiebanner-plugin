@@ -8,9 +8,11 @@ You can do this, by adding the following link to your `<head>`-tag
 
 ## Blocked Resources
 
-Query Selectors (sperated by ,) to Block those Elements for the Specified Cookie
-If you want to block a Element Tag i.e "iframe", you need to add the following line:
+Query Selectors (sperated by ,) to Block those Elements for the Specified Cookie.  
+If you want to block a Element Tag i.e "iframe", you need to add the following line:  
 `[data-type=iframe],iframe`
+
+it's important to add both selectors, one is for the sever, the other is for the Client.
 
 ## Link to Data privacy
 

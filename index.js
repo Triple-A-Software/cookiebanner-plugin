@@ -17,11 +17,11 @@ export default definePlugin(async (ctx) => {
   const actionHandler = ctx.registerHandler(["POST", "GET"], "/cookiebanner", async (req) => {
     const fromDb = await ctx.storage.getOne(db_id);
     if (req.method === "GET") {
-      return fromDb.data;
+      return fromDb?.data;
     }
     if (req.method === "POST") {
-      const { data } = await ctx.storage.updateOne(db_id, req.body);
-      return data;
+      const fromDb = await ctx.storage.updateOne(db_id, req.body);
+      return fromDb?.data;
     }
     throw Error(`Method not allowed ${req.method}`);
   });
@@ -45,7 +45,7 @@ export default definePlugin(async (ctx) => {
 
   ctx.onRewrite(async (rewriter) => {
     const dataFromDb = await ctx.storage.getOne(db_id);
-    const data = dataFromDb.data;
+    const data = dataFromDb?.data;
     if (!data || !data.active) return;
 
     console.log("DATA", data);
