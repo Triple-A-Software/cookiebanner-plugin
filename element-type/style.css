@@ -40,7 +40,7 @@
 }
 
 .cookie-banner-container{
-    width: 70%;
+    width: 60%;
 }
 
 .cookie-banner-text{
@@ -99,7 +99,7 @@
     background: rgb(23 37 84);
     font-weight: 600;
     border-radius: 10px 10px 0 0;
-    padding: .625rem 1.25rem;
+    padding: 1rem 1.25rem;
     padding-bottom: 1.7rem !important;
 }
 
@@ -167,6 +167,7 @@
     display: inline-flex;
     align-items: center;
     cursor: pointer;
+    justify-content: end;
 }
 
 .cookie-banner-toogle{
