@@ -38,6 +38,9 @@ function initializeCookieBanner(json) {
       if (!json.categories[cookie].active) {
         document.getElementById(`${cookie}-cookie-toggle`).style.display = "none";
       }
+      if (getCookie(cookie) === "true") {
+        document.getElementById(`${cookie}-cookie`).checked = true;
+      }
     }
   }
 }
