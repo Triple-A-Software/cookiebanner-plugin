@@ -194,11 +194,11 @@ var cookiebanner_plugin_default = definePlugin(async (ctx) => {
   const actionHandler = ctx.registerHandler(["POST", "GET"], "/cookiebanner", async (req) => {
     const fromDb = await ctx.storage.getOne(db_id);
     if (req.method === "GET") {
-      return fromDb.data;
+      return fromDb?.data;
     }
     if (req.method === "POST") {
-      const { data } = await ctx.storage.updateOne(db_id, req.body);
-      return data;
+      const fromDb2 = await ctx.storage.updateOne(db_id, req.body);
+      return fromDb2?.data;
     }
     throw Error(`Method not allowed ${req.method}`);
   });
@@ -678,7 +678,7 @@ main();
   ctx.registerSettingsPage("/cookie-banner", elementType_default(actionHandler));
   ctx.onRewrite(async (rewriter) => {
     const dataFromDb = await ctx.storage.getOne(db_id);
-    const data = dataFromDb.data;
+    const data = dataFromDb?.data;
     if (!data || !data.active)
       return;
     console.log("DATA", data);
