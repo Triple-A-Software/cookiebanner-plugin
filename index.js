@@ -1,5 +1,5 @@
 import { definePlugin } from "@cms-local/plugin-interface";
-import { $loadFileToString$ } from "@cms-local/plugin-interface/macros" with { type: "macro" };
+import { readFileSync } from "node:fs" with { type: "macro" };
 import { constructDefaultFormData } from "./utils.js";
 
 import elementType from "./elementType.js";
@@ -33,9 +33,9 @@ export default definePlugin(async (ctx) => {
   ctx.registerElementType({
     name: "Cookiebanner",
     icon: "i-tabler-cookie",
-    template: $loadFileToString$("./element-type/template.html"),
-    style: $loadFileToString$("./element-type/style.css"),
-    script: $loadFileToString$("./element-type/script.js"),
+    template: readFileSync("./element-type/template.html", "utf-8"),
+    style: readFileSync("./element-type/style.css", "utf-8"),
+    script: readFileSync("./element-type/script.js", "utf-8"),
     form: {
       label: {
         de: "Cookiebanner",
