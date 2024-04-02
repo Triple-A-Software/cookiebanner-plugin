@@ -1,19 +1,12 @@
 import { definePlugin } from "@cms-local/plugin-interface";
 import { $loadFileToString$ } from "@cms-local/plugin-interface/macros" with { type: "macro" };
+import { constructDefaultFormData } from "./utils.js";
 
 import elementType from "./elementType.js";
 
 const cookies = ["performance", "statistic", "marketing", "functional"];
 
 export default definePlugin(async (ctx) => {
-  const allData = await ctx.storage.getAll();
-  let db_id = allData.at(0)?.id;
-  if (allData.length === 0) {
-    db_id = await ctx.storage.createOne().id;
-  }
-
-  console.log("ID", db_id);
-
   const actionHandler = ctx.registerHandler(["POST", "GET"], "/cookiebanner", async (req) => {
     const fromDb = await ctx.storage.getOne(db_id);
     if (req.method === "GET") {
@@ -25,6 +18,16 @@ export default definePlugin(async (ctx) => {
     }
     throw Error(`Method not allowed ${req.method}`);
   });
+
+  const allData = await ctx.storage.getAll();
+  let db_id = allData.at(0)?.id;
+  if (allData.length === 0) {
+    const default_data = constructDefaultFormData(elementType(actionHandler).form.properties);
+    const createData = await ctx.storage.createOne(default_data);
+    db_id = createData.id;
+    console.log("CREAT_DATA", createData);
+  }
+  console.log("ID", db_id);
 
   // Needs Flowbite to Display Properly
   ctx.registerElementType({

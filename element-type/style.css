@@ -153,12 +153,12 @@
 }
 
 .cookie-banner-modal-body-btn-container{
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(4,1fr);
 }
 
 .cookie-banner-modal-body-btn-text{
     font-style: italic;
-    grid-column: span 2 / span 2;
+    grid-column: span 3 / span 3;
     border-top: lightgray solid 1px;
     padding-top: 1rem;
 }
