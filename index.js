@@ -25,7 +25,6 @@ export default definePlugin(async (ctx) => {
     const default_data = constructDefaultFormData(elementType(actionHandler).form.properties);
     const createData = await ctx.storage.createOne(default_data);
     db_id = createData.id;
-    console.log("CREAT_DATA", createData);
   }
   console.log("ID", db_id);
 
