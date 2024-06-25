@@ -26,12 +26,12 @@ export default definePlugin(async (ctx) => {
     const createData = await ctx.storage.createOne(default_data);
     db_id = createData.id;
   }
-  console.log("ID", db_id);
 
   // Needs Flowbite to Display Properly
   ctx.registerElementType({
     name: "Cookiebanner",
     icon: "i-tabler-cookie",
+    category: "misc",
     template: readFileSync("./element-type/template.html", "utf-8"),
     style: readFileSync("./element-type/style.css", "utf-8"),
     script: readFileSync("./element-type/script.js", "utf-8"),
@@ -50,7 +50,6 @@ export default definePlugin(async (ctx) => {
     const data = dataFromDb?.data;
     if (!data || !data.active) return;
 
-    console.log("DATA", data);
     for (const cookie of cookies) {
       rewriter.on(data.categories[cookie].blockedResources, {
         element(el) {
