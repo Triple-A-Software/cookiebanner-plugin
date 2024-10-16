@@ -32,12 +32,22 @@ export default function (actionHandler) {
                 en: "Functional",
               },
               id: "functional",
+
               icon: "i-tabler-tools",
               description: {
                 de: "Diese Cookies sind unerlässlich für die Funktionalität einer Website und ermöglichen grundlegende Funktionen wie die Navigation und den Zugriff auf geschützte Bereiche",
                 en: "These cookies are essential for the functionality of a website, enabling basic functions like navigation and access to secure areas.",
               },
               properties: [
+                {
+                  type: "checkbox",
+                  id: "active",
+                  defaultValue: false,
+                  label: {
+                    de: "aktiviert",
+                    en: "active",
+                  },
+                },
                 {
                   type: "text",
                   id: "blockedResources",

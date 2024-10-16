@@ -7,6 +7,9 @@ import elementType from "./elementType.js";
 const cookies = ["performance", "statistic", "marketing", "functional"];
 
 export default definePlugin(async (ctx) => {
+
+
+  
   const actionHandler = ctx.registerHandler(["POST", "GET"], "/cookiebanner", async (req) => {
     const fromDb = await ctx.storage.getOne(db_id);
     if (req.method === "GET") {
@@ -40,6 +43,7 @@ export default definePlugin(async (ctx) => {
         de: "Cookiebanner",
         en: "Cookie-banner",
       },
+      properties: []
     },
   });
 
