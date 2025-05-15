@@ -70,28 +70,29 @@ async fn ui_page(State(state): State<AppState>) -> impl IntoResponse {
             <title>"Cookie banner ui"</title>
         </head>
         <body class="bg-default" hx-ext="json-enc-custom">
-            <form
-                action={macros::api_path!("/settings")}
-                parse-types="true"
-                method="POST"
-                hx-boost={true}
-                class="flex flex-col gap-2"
-            >
-                <label r#for="enabled">"Enabled:"</label>
-                <InputCheckbox id={"enabled".to_string()} value={settings.enabled} />
+            <div class="container">
+                <form
+                    action={macros::api_path!("/settings")}
+                    parse-types="true"
+                    method="POST"
+                    hx-boost={true}
+                    class="flex flex-col gap-2"
+                >
+                    <FormField id={"enabled".to_string()} label={"Enabled".to_string()}>
+                        <InputCheckbox id={"enabled".to_string()} value={settings.enabled} />
+                    </FormField>
 
-                <br />
+                    <FormField id={"privacy_policy_page_id".to_string()} label={"Choose a Privacy Policy Page".to_string()}>
+                        <InputSelect
+                            options={pages}
+                            value={settings.privacy_policy_page_id}
+                            id={"privacy_policy_page_id".to_string()}
+                        />
+                    </FormField>
 
-                <FormField id={"privacy_policy_page_id".to_string()} label={"Choose a Privacy Policy Page:".to_string()}>
-                    <InputSelect
-                        options={pages}
-                        value={settings.privacy_policy_page_id}
-                        id={"privacy_policy_page_id".to_string()}
-                    />
-                </FormField>
-
-                <Button label={Some("Save".to_string())} icon={Some("i-tabler-device-floppy".to_string())} />
-            </form>
+                    <Button label={Some("Save".to_string())} icon={Some("i-tabler-device-floppy".to_string())} />
+                </form>
+            </div>
         </body>
         </html>
     })

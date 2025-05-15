@@ -49,6 +49,6 @@ where
 #[component]
 pub fn InputCheckbox(value: bool, id: String) {
     html! {
-        <input r#type="checkbox" class="rounded-sm ring ring-inset ring-accented overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary size-4" id={id.clone()} name={id} checked={value}/>
+        <input r#type="checkbox" class="" id={id.clone()} name={id} checked={value}/>
     }
 }

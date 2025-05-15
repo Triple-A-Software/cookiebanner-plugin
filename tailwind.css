@@ -6,6 +6,12 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer components {
+    .container {
+        @apply max-w-(--ui-container) mx-auto px-4 sm:px-6 lg:px-8 w-full;
+    }
+}
+
 @theme {
     /* general colors */
     --ui-color-primary-50: var(--color-orange-50, oklch(98% 0.016 73.684));
