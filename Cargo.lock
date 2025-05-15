@@ -147,6 +147,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "axum-extra"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "45bf463831f5131b7d3c756525b305d40f1185b688565648a92e1392ca35713d"
+dependencies = [
+ "axum",
+ "axum-core",
+ "bytes",
+ "form_urlencoded",
+ "futures-util",
+ "http",
+ "http-body",
+ "http-body-util",
+ "mime",
+ "pin-project-lite",
+ "rustversion",
+ "serde",
+ "serde_html_form",
+ "serde_path_to_error",
+ "tower",
+ "tower-layer",
+ "tower-service",
+]
+
+[[package]]
 name = "backtrace"
 version = "0.3.75"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -175,9 +200,9 @@ checksum = "89e25b6adfb930f02d1981565a6e5d9c547ac15a96606256d3b59040e5cd4ca3"
 
 [[package]]
 name = "bitflags"
-version = "2.9.0"
+version = "2.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c8214115b7bf84099f1309324e63141d4c5d7cc26862f97a0a857dbefe165bd"
+checksum = "1b8e56985ec62d17e9c1001dc89c88ecd7dc08e47eba5ec7c29c7b5eeecde967"
 dependencies = [
  "serde",
 ]
@@ -269,6 +294,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
+ "axum-extra",
  "chrono",
  "serde",
  "serde_json",
@@ -1340,6 +1366,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_html_form"
+version = "0.2.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d2de91cf02bbc07cde38891769ccd5d4f073d22a40683aa4bc7a95781aaa2c4"
+dependencies = [
+ "form_urlencoded",
+ "indexmap",
+ "itoa",
+ "ryu",
+ "serde",
+]
+
+[[package]]
 name = "serde_json"
 version = "1.0.140"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1663,7 +1702,7 @@ dependencies = [
 [[package]]
 name = "ssr-html"
 version = "0.1.0"
-source = "git+https://codeberg.org/blechlawine/ssr-html#1d2ce0648f8895d6ce2cca391df0c6c82af3f141"
+source = "git+https://codeberg.org/blechlawine/ssr-html#91f371bb1aada5d3a481d4a9f36864394c698aca"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -1678,7 +1717,7 @@ dependencies = [
 [[package]]
 name = "ssr-html-macros"
 version = "0.1.0"
-source = "git+https://codeberg.org/blechlawine/ssr-html#1d2ce0648f8895d6ce2cca391df0c6c82af3f141"
+source = "git+https://codeberg.org/blechlawine/ssr-html#91f371bb1aada5d3a481d4a9f36864394c698aca"
 dependencies = [
  "convert_case",
  "proc-macro2",

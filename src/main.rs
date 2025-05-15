@@ -14,6 +14,10 @@ use tracing::Level;
 
 mod model;
 mod routes;
+mod components {
+    pub mod button;
+    pub mod form;
+}
 
 #[derive(Clone)]
 struct AppState {
