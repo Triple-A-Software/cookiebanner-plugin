@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use serde_json::json;
 use ssr_html::prelude::*;
 use ssr_html_macros::{component, html};
 
@@ -49,6 +50,26 @@ where
 #[component]
 pub fn InputCheckbox(value: bool, id: String) {
     html! {
-        <input r#type="checkbox" class="" id={id.clone()} name={id} checked={value}/>
+        <button
+            class="rounded-sm ring ring-inset ring-accented overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary size-4"
+            role="checkbox"
+            r#type="button"
+            aria-checked={value}
+            aria-required="false"
+            v-scope={json!({
+                "checked": value
+            })}
+            @click="checked = !checked"
+        >
+            <input r#type="checkbox" class="hidden pointer-events-none" id={id.clone()} name={id} :checked="checked" />
+            <span
+                :class="{
+                    'flex items-center justify-center size-full text-inverted pointer-events-none': true,
+                    'bg-primary': checked,
+                }"
+            >
+                <span class="i-tabler-check shrink-0 size-full" aria-hidden="true" v-if="checked"></span>
+            </span>
+        </button>
     }
 }

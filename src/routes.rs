@@ -65,6 +65,7 @@ async fn ui_page(State(state): State<AppState>) -> impl IntoResponse {
             <meta charset="UTF-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <script src={macros::ui_path!("/public/htmx.min.js")}></script>
+            <script src={macros::ui_path!("/public/petite-vue.iife.js")} defer init></script>
             <script src={macros::ui_path!("/public/json-enc-custom.js")}></script>
             <link rel="stylesheet" href={macros::ui_path!("/public/main.css")} />
             <title>"Cookie banner ui"</title>
