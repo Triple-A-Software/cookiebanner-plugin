@@ -5,7 +5,7 @@ use ssr_html::prelude::*;
 use ssr_html_macros::{component, html};
 
 #[component(slots = [default])]
-pub fn FormField(label: String, id: String) {
+pub async fn FormField(label: String, id: String) -> String {
     html! {
         <div class="text-sm">
             <div class="">
@@ -30,9 +30,9 @@ where
     fn id(&self) -> Self::TId;
 }
 #[component]
-pub fn InputSelect<T>(options: Vec<T>, value: Option<<T as Id>::TId>, id: String)
+pub async fn InputSelect<T>(options: Vec<T>, value: Option<<T as Id>::TId>, id: String) -> String
 where
-    T: Display + Id + 'static,
+    T: Display + Id + 'static + Sync + Send,
 {
     html! {
         <select id={id.clone()} name={id} class="relative group rounded-md inline-flex items-center focus:outline-none disabled:cursor-not-allowed disabled:opacity-75 transition-colors px-2.5 py-1.5 text-sm gap-1.5 text-highlighted bg-default ring ring-inset ring-accented focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary pe-9 w-48">
@@ -48,7 +48,7 @@ where
 }
 
 #[component]
-pub fn InputCheckbox(value: bool, id: String) {
+pub async fn InputCheckbox(value: bool, id: String) -> String {
     html! {
         <button
             class="rounded-sm ring ring-inset ring-accented overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary size-4"

@@ -25,12 +25,12 @@ pub enum Variant {
 }
 
 #[component]
-pub fn Button(
+pub async fn Button(
     #[prop(optional)] label: Option<String>,
     #[prop(optional)] color: Color,
     #[prop(optional)] variant: Variant,
     #[prop(optional)] icon: Option<String>,
-) {
+) -> String {
     let color_class = match color {
         Color::Secondary => {
             "bg-secondary hover:bg-secondary/75 disabled:bg-secondary aria-disabled:bg-secondary focus-visible:outline-secondary"

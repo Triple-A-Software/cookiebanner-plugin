@@ -2,13 +2,11 @@ use std::fmt::Display;
 
 use axum::Json;
 use axum::extract::State;
-use axum::http::StatusCode;
-use axum::response::Redirect;
+use axum::response::{Html, Redirect};
 use axum::routing::post;
 use axum::{Router, response::IntoResponse, routing::get};
 use serde::Deserialize;
 use sqlx::prelude::*;
-use ssr_html::HtmlStream;
 use ssr_html::prelude::*;
 use ssr_html_macros::html;
 use tower_http::services::ServeDir;
@@ -59,42 +57,42 @@ async fn ui_page(State(state): State<AppState>) -> impl IntoResponse {
         .fetch_one(&state.db)
         .await
         .unwrap();
-    HtmlStream(html! {
+    Html(html! {
         <html lang="en" class="dark">
-        <head>
-            <meta charset="UTF-8"/>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            <script src={macros::ui_path!("/public/htmx.min.js")}></script>
-            <script src={macros::ui_path!("/public/petite-vue.iife.js")} defer init></script>
-            <script src={macros::ui_path!("/public/json-enc-custom.js")}></script>
-            <link rel="stylesheet" href={macros::ui_path!("/public/main.css")} />
-            <title>"Cookie banner ui"</title>
-        </head>
-        <body class="bg-default" hx-ext="json-enc-custom">
-            <div class="container">
-                <form
-                    action={macros::api_path!("/settings")}
-                    parse-types="true"
-                    method="POST"
-                    hx-boost={true}
-                    class="flex flex-col gap-2"
-                >
-                    <FormField id={"enabled".to_string()} label={"Enabled".to_string()}>
-                        <InputCheckbox id={"enabled".to_string()} value={settings.enabled} />
-                    </FormField>
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <script src={macros::ui_path!("/public/htmx.min.js")}></script>
+                <script src={macros::ui_path!("/public/petite-vue.iife.js")} defer init></script>
+                <script src={macros::ui_path!("/public/json-enc-custom.js")}></script>
+                <link rel="stylesheet" href={macros::ui_path!("/public/main.css")} />
+                <title>"Cookie banner ui"</title>
+            </head>
+            <body class="bg-default" hx-ext="json-enc-custom">
+                <div class="container">
+                    <form
+                        action={macros::api_path!("/settings")}
+                        parse-types="true"
+                        method="POST"
+                        hx-boost={true}
+                        class="flex flex-col gap-2"
+                    >
+                        <FormField id={"enabled".to_string()} label={"Enabled".to_string()}>
+                            <InputCheckbox id={"enabled".to_string()} value={settings.enabled} />
+                        </FormField>
 
-                    <FormField id={"privacy_policy_page_id".to_string()} label={"Choose a Privacy Policy Page".to_string()}>
-                        <InputSelect
-                            options={pages}
-                            value={settings.privacy_policy_page_id}
-                            id={"privacy_policy_page_id".to_string()}
-                        />
-                    </FormField>
+                        <FormField id={"privacy_policy_page_id".to_string()} label={"Choose a Privacy Policy Page".to_string()}>
+                            <InputSelect
+                                options={pages}
+                                value={settings.privacy_policy_page_id}
+                                id={"privacy_policy_page_id".to_string()}
+                            />
+                        </FormField>
 
-                    <Button label={Some("Save".to_string())} icon={Some("i-tabler-device-floppy".to_string())} />
-                </form>
-            </div>
-        </body>
+                        <Button label={Some("Save".to_string())} icon={Some("i-tabler-device-floppy".to_string())} />
+                    </form>
+                </div>
+            </body>
         </html>
     })
 }
