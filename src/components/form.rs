@@ -48,28 +48,41 @@ where
 }
 
 #[component]
-pub async fn InputCheckbox(value: bool, id: String) -> String {
+pub async fn InputCheckbox(value: bool, id: String, label: String) -> String {
     html! {
-        <button
-            class="rounded-sm ring ring-inset ring-accented overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary size-4"
-            role="checkbox"
-            r#type="button"
-            aria-checked={value}
-            aria-required="false"
-            v-scope={json!({
-                "checked": value
-            })}
-            @click="checked = !checked"
-        >
-            <input r#type="checkbox" class="hidden pointer-events-none" id={id.clone()} name={id} :checked="checked" />
-            <span
-                :class="{
-                    'flex items-center justify-center size-full text-inverted pointer-events-none': true,
-                    'bg-primary': checked,
-                }"
-            >
-                <span class="i-tabler-check shrink-0 size-full" aria-hidden="true" v-if="checked"></span>
-            </span>
-        </button>
+        <div class="relative flex items-start flex-row">
+            <div class="flex items-center h-5">
+                <button
+                    class="rounded-sm ring ring-inset ring-accented overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary size-4"
+                    role="checkbox"
+                    r#type="button"
+                    aria-checked={value}
+                    aria-required="false"
+                    v-scope={json!({
+                        "checked": value
+                    })}
+                    @click="checked = !checked"
+                >
+                    <input
+                        r#type="checkbox"
+                        class="hidden pointer-events-none"
+                        id={id.clone()}
+                        name={id.clone()}
+                        :checked="checked"
+                    />
+                    <span
+                        :class="{
+                            'flex items-center justify-center size-full text-inverted pointer-events-none': true,
+                            'bg-primary': checked,
+                        }"
+                    >
+                        <span class="i-tabler-check shrink-0 size-full" aria-hidden="true" v-if="checked"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="w-full ms-2 text-sm">
+                <label r#for={id.clone()} class="block font-medium text-default">{label}</label>
+            </div>
+        </div>
     }
 }

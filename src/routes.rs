@@ -78,9 +78,7 @@ async fn ui_page(State(state): State<AppState>) -> impl IntoResponse {
                         hx-boost={true}
                         class="flex flex-col gap-2"
                     >
-                        <FormField id={"enabled".to_string()} label={"Enabled".to_string()}>
-                            <InputCheckbox id={"enabled".to_string()} value={settings.enabled} />
-                        </FormField>
+                        <InputCheckbox id={"enabled".to_string()} value={settings.enabled} label={"Enabled".to_string()} />
 
                         <FormField id={"privacy_policy_page_id".to_string()} label={"Choose a Privacy Policy Page".to_string()}>
                             <InputSelect
@@ -100,6 +98,7 @@ async fn ui_page(State(state): State<AppState>) -> impl IntoResponse {
 
 #[derive(Deserialize, Debug)]
 struct SettingsUpdateBody {
+    #[serde(default)]
     enabled: bool,
     privacy_policy_page_id: i32,
 }
@@ -107,13 +106,11 @@ async fn update_settings(
     State(state): State<AppState>,
     Json(body): Json<SettingsUpdateBody>,
 ) -> impl IntoResponse {
-    let settings: Settings = sqlx::query_as(
-        r#"update settings set enabled = $1, privacy_policy_page_id = $2 returning *"#,
-    )
-    .bind(body.enabled)
-    .bind(body.privacy_policy_page_id)
-    .fetch_one(&state.db)
-    .await
-    .unwrap();
+    sqlx::query(r#"update settings set enabled = $1, privacy_policy_page_id = $2"#)
+        .bind(body.enabled)
+        .bind(body.privacy_policy_page_id)
+        .execute(&state.db)
+        .await
+        .unwrap();
     Redirect::to("/ui")
 }
