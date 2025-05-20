@@ -16,7 +16,7 @@ pub fn router() -> Router<AppState> {
 struct Settings {
     #[serde(default)]
     enabled: bool,
-    #[ts(as = "Vec<CookieCategory>")]
+    #[ts(as = "Option<Vec<CookieCategory>>")]
     cookie_categories: Option<Json<Vec<CookieCategory>>>,
 }
 
@@ -30,7 +30,7 @@ struct CookieCategory {
     #[ts(type = "Record<string, string>")]
     description: Json<HashMap<String, String>>,
     placeholder_html: Option<String>,
-    #[ts(as = "Vec<Selector>")]
+    #[ts(as = "Option<Vec<Selector>>")]
     selectors: Option<Json<Vec<Selector>>>,
 }
 
@@ -55,12 +55,11 @@ async fn update_settings(
             if let Some(id) = category.id {
                 sqlx::query(
                     r#"update cookie_category set
-                    enabled = $1,
-                    label = $2,
-                    description = $3,
-                    placeholder_html = $4
-                where id = $5
-            "#,
+                        enabled = $1,
+                        label = $2,
+                        description = $3,
+                        placeholder_html = $4
+                    where id = $5"#,
                 )
                 .bind(category.enabled)
                 .bind(&category.label)
@@ -73,10 +72,10 @@ async fn update_settings(
             } else {
                 let inserted: model::CookieCategory = sqlx::query_as(
                     r#"insert into cookie_category
-                    (enabled, label, description, placeholder_html)
-                values
-                    ($1, $2, $3, $4)
-                returning *"#,
+                        (enabled, label, description, placeholder_html)
+                    values
+                        ($1, $2, $3, $4)
+                    returning *"#,
                 )
                 .bind(category.enabled)
                 .bind(&category.label)
@@ -98,13 +97,15 @@ async fn update_settings(
                             .unwrap();
                     } else {
                         sqlx::query(
-                        r#"insert into selector (cookie_category_id, selector) values ($1, $2)"#,
-                    )
-                    .bind(category.id)
-                    .bind(&selector.selector)
-                    .execute(&state.db)
-                    .await
-                    .unwrap();
+                            r#"insert into selector (
+                                cookie_category_id, selector
+                            ) values ($1, $2)"#,
+                        )
+                        .bind(category.id)
+                        .bind(&selector.selector)
+                        .execute(&state.db)
+                        .await
+                        .unwrap();
                     }
                 }
             }

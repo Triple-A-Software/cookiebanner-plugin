@@ -6,6 +6,7 @@ export default {
 		yes: "Yes",
 		create: {
 			option: "Create option",
+			cookie_category: "Create cookie-category",
 		},
 	},
 	modal: {
@@ -18,6 +19,9 @@ export default {
 	input: {
 		label: {
 			enabled: "Enabled",
+			label: "Label",
+			description: "Description",
 		},
 	},
+	cookie_category: "Cookie category",
 };

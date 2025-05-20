@@ -8,6 +8,7 @@ export default {
 		yes: "Ja",
 		create: {
 			option: "Option erstellen",
+			cookie_category: "Cookie-kategorie erstellen",
 		},
 	},
 	modal: {
@@ -20,6 +21,9 @@ export default {
 	input: {
 		label: {
 			enabled: "Aktiviert",
+			label: "Name",
+			description: "Beschreibung",
 		},
 	},
+	cookie_category: "Cookie Kategorie",
 } satisfies typeof en;
