@@ -1,7 +1,6 @@
 create table if not exists settings (
     id text not null primary key,
-    enabled boolean not null default true,
-    privacy_policy_page_id int
+    enabled boolean not null default true
 );
 
 create table if not exists cookie_category (

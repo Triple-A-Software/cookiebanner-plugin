@@ -1,5 +1,8 @@
 set dotenv-load := true
 
+codegen:
+    cargo test export_bindings
+
 dev:
     cargo watch -x run
 
@@ -11,3 +14,4 @@ reset-db:
 
 build:
     cargo build --release
+    cd ui && bun vite build

@@ -1,0 +1,54 @@
+{
+	"$schema": "https://neleto.io/schemas/fix/pluginsystem-rework-improvements/form_schema.json",
+	"label": {
+		"de": "Cookie-banner",
+		"en": "Cookie-banner"
+	},
+	"properties": [
+		{
+			"id": "main_text",
+			"type": "textarea",
+			"required": true,
+			"label": {
+				"de": "Text",
+				"en": "Text"
+			}
+		},
+		{
+			"id": "privacy_policy_link_text",
+			"type": "text",
+			"label": {
+				"de": "Datenschutzerklärungslinktext",
+				"en": "Privacy policy link text"
+			}
+		},
+		{
+			"id": "privacy_policy_page",
+			"type": "relation",
+			"multiple": false,
+			"relationName": "page",
+			"label": {
+				"de": "Datenschutzerklärungs-seite",
+				"en": "Privacy policy page"
+			}
+		},
+		{
+			"id": "accept_all_button_text",
+			"type": "text",
+			"required": true,
+			"label": {
+				"de": "Alle akzeptieren Button Text",
+				"en": "Accept all button text"
+			}
+		},
+		{
+			"id": "deny_all_button_text",
+			"type": "text",
+			"required": true,
+			"label": {
+				"de": "Alle ablehnen Button Text",
+				"en": "Deny all button text"
+			}
+		}
+	]
+}

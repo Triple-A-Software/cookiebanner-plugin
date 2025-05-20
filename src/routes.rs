@@ -1,116 +1,75 @@
-use std::fmt::Display;
+use std::borrow::Cow;
+use std::str::FromStr;
 
-use axum::Json;
+use axum::Router;
 use axum::extract::State;
-use axum::response::{Html, Redirect};
 use axum::routing::post;
-use axum::{Router, response::IntoResponse, routing::get};
-use serde::Deserialize;
-use sqlx::prelude::*;
-use ssr_html::prelude::*;
-use ssr_html_macros::html;
-use tower_http::services::ServeDir;
+use lol_html::html_content::{ContentType, Element};
+use lol_html::{ElementContentHandlers, HtmlRewriter, Selector};
 
-use crate::components::button::{Button, ButtonProps};
-use crate::components::form::{
-    FormField, FormFieldProps, Id, InputCheckbox, InputCheckboxProps, InputSelect, InputSelectProps,
-};
-use crate::model::Settings;
-use crate::{AppState, macros};
+use crate::AppState;
+use crate::model::{SelectorWithCookieCategory, Settings};
 
-pub fn ui() -> Router<AppState> {
-    Router::new()
-        .route("/", get(ui_page))
-        .nest_service("/public", ServeDir::new("public"))
+pub mod api;
+
+pub fn internal() -> Router<AppState> {
+    Router::new().route("/rewriter", post(internal_rewriter))
 }
 
-pub fn api() -> Router<AppState> {
-    Router::new().route("/settings", post(update_settings))
+fn build_rewriter_handler(
+    selector: SelectorWithCookieCategory,
+) -> Box<dyn FnMut(&mut Element<'_, '_>) -> lol_html::HandlerResult> {
+    Box::new(move |el| {
+        let tag_name = el.tag_name_preserve_case();
+        el.set_tag_name("template")?;
+        el.set_attribute("data-original-tag", &tag_name)?;
+        el.set_attribute("class", "cookie-banner-blocked")?;
+        if let Some(placeholder) = selector.cookie_category.placeholder_html.as_deref() {
+            el.after(placeholder, ContentType::Html);
+        }
+        Ok(())
+    })
 }
 
-#[derive(FromRow)]
-struct Page {
-    id: i32,
-    title: String,
-}
-
-impl Id for Page {
-    type TId = i32;
-
-    fn id(&self) -> Self::TId {
-        self.id
-    }
-}
-
-impl Display for Page {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(&self.title)
-    }
-}
-
-async fn ui_page(State(state): State<AppState>) -> impl IntoResponse {
-    let pages: Vec<Page> = sqlx::query_as(r#"select * from not_deleted.page"#)
-        .fetch_all(&state.cms_db)
-        .await
-        .unwrap();
+async fn internal_rewriter(State(state): State<AppState>, body: String) -> String {
     let settings: Settings = sqlx::query_as(r#"select * from settings where id = 'settings'"#)
         .fetch_one(&state.db)
         .await
         .unwrap();
-    Html(html! {
-        <html lang="en" class="dark">
-            <head>
-                <meta charset="UTF-8"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <script src={macros::ui_path!("/public/htmx.min.js")}></script>
-                <script src={macros::ui_path!("/public/petite-vue.iife.js")}></script>
-                <script src={macros::ui_path!("/public/petite-vue.init.js")} defer></script>
-                <script src={macros::ui_path!("/public/json-enc-custom.js")}></script>
-                <link rel="stylesheet" href={macros::ui_path!("/public/main.css")} />
-                <title>"Cookie banner ui"</title>
-            </head>
-            <body class="bg-default" hx-ext="json-enc-custom">
-                <div class="container">
-                    <form
-                        action={macros::api_path!("/settings")}
-                        parse-types="true"
-                        method="POST"
-                        hx-boost={true}
-                        class="flex flex-col gap-2"
-                    >
-                        <InputCheckbox id={"enabled".to_string()} value={settings.enabled} label={"Enabled".to_string()} />
-
-                        <FormField id={"privacy_policy_page_id".to_string()} label={"Choose a Privacy Policy Page".to_string()}>
-                            <InputSelect
-                                options={pages}
-                                value={settings.privacy_policy_page_id}
-                                id={"privacy_policy_page_id".to_string()}
-                            />
-                        </FormField>
-
-                        <Button label={Some("Save".to_string())} icon={Some("i-tabler-device-floppy".to_string())} />
-                    </form>
-                </div>
-            </body>
-        </html>
-    })
-}
-
-#[derive(Deserialize, Debug)]
-struct SettingsUpdateBody {
-    #[serde(default)]
-    enabled: bool,
-    privacy_policy_page_id: i32,
-}
-async fn update_settings(
-    State(state): State<AppState>,
-    Json(body): Json<SettingsUpdateBody>,
-) -> impl IntoResponse {
-    sqlx::query(r#"update settings set enabled = $1, privacy_policy_page_id = $2"#)
-        .bind(body.enabled)
-        .bind(body.privacy_policy_page_id)
-        .execute(&state.db)
-        .await
-        .unwrap();
-    Redirect::to("/ui")
+    if !settings.enabled {
+        return body;
+    }
+    let selectors: Vec<SelectorWithCookieCategory> = sqlx::query_as(
+        r#"
+        select * from selector
+        left join lateral (
+            select row_to_json(c) as cookie_category from cookie_category c
+                where c.id = selector.cookie_category_id
+        ) on true"#,
+    )
+    .fetch_all(&state.db)
+    .await
+    .unwrap();
+    let rewriter_handler = selectors
+        .into_iter()
+        .map(|selector| {
+            (
+                Cow::Owned(Selector::from_str(&selector.selector).unwrap()),
+                ElementContentHandlers::default().element(build_rewriter_handler(selector)),
+            )
+        })
+        .collect();
+    let mut output = vec![];
+    {
+        let mut rewriter = HtmlRewriter::new(
+            lol_html::Settings {
+                element_content_handlers: rewriter_handler,
+                ..lol_html::Settings::new()
+            },
+            |c: &[u8]| output.extend_from_slice(c),
+        );
+        let _ = rewriter.write(body.as_bytes());
+        let _ = rewriter.end();
+    }
+    String::from_utf8(output).unwrap()
 }

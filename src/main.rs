@@ -8,46 +8,17 @@ use sqlx::PgPool;
 use tokio::net::TcpListener;
 use tower_http::{
     normalize_path::NormalizePathLayer,
+    services::ServeDir,
     trace::{self, TraceLayer},
 };
 use tracing::Level;
 
 mod model;
 mod routes;
-mod components {
-    pub mod button;
-    pub mod form;
-}
 
 #[derive(Clone)]
 struct AppState {
     db: PgPool,
-    cms_db: PgPool,
-}
-
-#[cfg(debug_assertions)]
-const API_PREFIX: &str = "";
-#[cfg(not(debug_assertions))]
-const API_PREFIX: &str = "/api/rest/plugins/cookie-banner/api";
-
-#[cfg(debug_assertions)]
-const UI_PREFIX: &str = "";
-#[cfg(not(debug_assertions))]
-const UI_PREFIX: &str = "/api/rest/plugins/cookie-banner";
-
-pub mod macros {
-    macro_rules! ui_path {
-        ($path: expr) => {
-            format!("{}/ui{}", crate::UI_PREFIX, $path)
-        };
-    }
-    macro_rules! api_path {
-        ($path: expr) => {
-            format!("{}/api{}", crate::API_PREFIX, $path)
-        };
-    }
-    pub(crate) use api_path;
-    pub(crate) use ui_path;
 }
 
 async fn create_db() -> PgPool {
@@ -60,11 +31,6 @@ async fn create_db() -> PgPool {
     db
 }
 
-async fn connect_cms_db() -> PgPool {
-    let db_url = env::var("CMS_DATABASE_URL").expect("CMS_DATABASE_URL must be set");
-    sqlx::PgPool::connect(&db_url).await.unwrap()
-}
-
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt()
@@ -73,17 +39,17 @@ async fn main() {
         .init();
 
     let db = create_db().await;
-    let cms_db = connect_cms_db().await;
 
     sqlx::query(r#"insert into settings (id) values ('settings') on conflict do nothing"#)
         .execute(&db)
         .await
         .unwrap();
 
-    let state = AppState { db, cms_db };
+    let state = AppState { db };
     let router = Router::new()
-        .nest("/ui", routes::ui())
-        .nest("/api", routes::api())
+        .nest_service("/ui", ServeDir::new("ui/dist"))
+        .nest("/api", routes::api::router())
+        .nest("/internal", routes::internal())
         .layer(NormalizePathLayer::trim_trailing_slash())
         .layer(
             TraceLayer::new_for_http()

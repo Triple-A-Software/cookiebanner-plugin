@@ -7,8 +7,6 @@ use sqlx::{prelude::*, types::Json};
 pub struct Settings {
     id: String,
     pub enabled: bool,
-    /// the id of the privacy policy page
-    pub privacy_policy_page_id: Option<i32>,
 }
 
 #[derive(Clone, Serialize, Deserialize, FromRow, Debug)]
@@ -27,5 +25,13 @@ pub struct CookieCategory {
 pub struct Selector {
     id: i32,
     pub cookie_category_id: i32,
+    pub selector: String,
+}
+
+#[derive(Clone, Serialize, Deserialize, FromRow, Debug)]
+pub struct SelectorWithCookieCategory {
+    id: i32,
+    pub cookie_category_id: i32,
+    pub cookie_category: Json<CookieCategory>,
     pub selector: String,
 }
