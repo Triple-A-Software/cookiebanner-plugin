@@ -51,6 +51,11 @@ async fn update_settings(
         .await
         .unwrap();
     if let Some(mut cookie_categories) = body.cookie_categories {
+        sqlx::query(r#"delete from cookie_category where not (id = ANY($1))"#)
+            .bind(cookie_categories.iter().map(|c| c.id).collect::<Vec<_>>())
+            .execute(&state.db)
+            .await
+            .unwrap();
         for category in cookie_categories.iter_mut() {
             if let Some(id) = category.id {
                 sqlx::query(
@@ -87,6 +92,11 @@ async fn update_settings(
                 category.id = Some(inserted.id);
             }
             if let Some(selectors) = category.selectors.as_ref() {
+                sqlx::query(r#"delete from selector where not (id = ANY($1))"#)
+                    .bind(selectors.iter().map(|s| s.id).collect::<Vec<_>>())
+                    .execute(&state.db)
+                    .await
+                    .unwrap();
                 for selector in selectors.iter() {
                     if let Some(id) = selector.id {
                         sqlx::query(r#"update selector set selector = $1 where id = $2 "#)
@@ -117,14 +127,29 @@ async fn update_settings(
 async fn get_settings(State(state): State<AppState>) -> impl IntoResponse {
     let settings: Settings = sqlx::query_as(
         r#"
-        select * from settings
-        left join lateral (
-            select row_to_json(c) as cookie_categories from cookie_category c
-            left join lateral (
-                select row_to_json(s) as selectors from selector s where cookie_category_id = c.id
-            ) on true
-        ) on true
-        where settings.id = 'settings'
+        SELECT
+            s.*,
+            cookie_categories_data.cookie_categories
+        FROM
+            settings s
+        LEFT JOIN LATERAL (
+            SELECT
+                coalesce(json_agg(
+                    jsonb_set(
+                        to_jsonb(c),
+                        '{selectors}',
+                        (
+                            SELECT coalesce(jsonb_agg(to_jsonb(s)), '[]'::jsonb)
+                            FROM selector s
+                            WHERE s.cookie_category_id = c.id
+                        )
+                    )
+                ), '[]'::json) AS cookie_categories
+            FROM
+                cookie_category c
+        ) AS cookie_categories_data ON true
+        WHERE
+            s.id = 'settings';
         "#,
     )
     .fetch_one(&state.db)

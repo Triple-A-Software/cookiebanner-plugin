@@ -19,5 +19,5 @@ create table if not exists selector (
     selector text not null default '',
 
     primary key (id),
-    foreign key (cookie_category_id) references cookie_category(id)
+    foreign key (cookie_category_id) references cookie_category(id) on delete cascade
 );

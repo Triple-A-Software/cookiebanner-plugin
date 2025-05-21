@@ -1,5 +1,5 @@
 <template>
-    <UModal v-model="open">
+    <UModal v-model:open="open">
         <template #title>
             <div class="flex flex-row gap-2 items-center">
                 <UIcon name="i-tabler-trash" />
@@ -25,6 +25,7 @@
     </UModal>
 </template>
 <script setup lang="ts" generic="TId">
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
@@ -36,7 +37,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: "confirm", id: TId): void;
 }>();
-const open = defineModel<boolean>("open");
+const open = ref(false);
 const { t } = useI18n();
 
 async function confirm() {
