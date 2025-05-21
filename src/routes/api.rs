@@ -1,6 +1,12 @@
 use std::collections::HashMap;
 
-use axum::{Router, extract::State, http::StatusCode, response::IntoResponse, routing::post};
+use axum::{
+    Router,
+    extract::State,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::post,
+};
 use serde::{Deserialize, Serialize};
 use sqlx::{prelude::FromRow, types::Json};
 use ts_rs::TS;
@@ -41,10 +47,48 @@ struct Selector {
     selector: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, TS)]
+#[ts(export, export_to = "index.ts")]
+struct ApiError {
+    message: String,
+}
+
+impl IntoResponse for ApiError {
+    fn into_response(self) -> Response {
+        (StatusCode::BAD_REQUEST, axum::Json(self)).into_response()
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, TS)]
+#[ts(export, export_to = "index.ts")]
+struct StatusResponse {
+    success: bool,
+}
+impl StatusResponse {
+    pub fn success() -> Self {
+        Self { success: true }
+    }
+}
+
 async fn update_settings(
     State(state): State<AppState>,
     axum::Json(body): axum::Json<Settings>,
-) -> impl IntoResponse {
+) -> Result<Response, Response> {
+    if body
+        .cookie_categories
+        .as_ref()
+        .map(|categories| {
+            categories
+                .iter()
+                .any(|c| c.placeholder_html.as_ref().is_none_or(|s| s.is_empty()))
+        })
+        .unwrap_or_default()
+    {
+        return Err(ApiError {
+            message: "placeholder_missing".to_string(),
+        }
+        .into_response());
+    }
     sqlx::query(r#"update settings set enabled = $1 where id = 'settings'"#)
         .bind(body.enabled)
         .execute(&state.db)
@@ -121,7 +165,7 @@ async fn update_settings(
             }
         }
     }
-    StatusCode::OK
+    Ok(axum::Json(StatusResponse::success()).into_response())
 }
 
 async fn get_settings(State(state): State<AppState>) -> impl IntoResponse {

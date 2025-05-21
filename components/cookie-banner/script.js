@@ -5,8 +5,56 @@
  * @param {string} param0.id
  */
 export function init({ element, data, id }) {
-	const accept_all_button = element.querySelector(".accept-all-btn");
-	const deny_all_button = element.querySelector(".deny-all-btn");
-	accept_all_button.addEventListener("click", () => {});
-	deny_all_button.addEventListener("click", () => {});
+	const stored_json = localStorage.getItem("cookies");
+	if (!stored_json) {
+		element.classList.remove("hidden");
+		const accept_all_button = element.querySelector(".accept-all-btn");
+		const deny_all_button = element.querySelector(".deny-all-btn");
+		accept_all_button.addEventListener("click", () => {
+			acceptAll();
+			element.classList.add("hidden");
+		});
+		deny_all_button.addEventListener("click", () => {
+			denyAll();
+			element.classList.add("hidden");
+		});
+	} else {
+		const stored = JSON.parse(stored_json);
+		for (const type of stored.allowed) {
+			unblockElements(type);
+		}
+	}
+}
+
+function unblockElements(type) {
+	if (type === "all") {
+		const blocked = document.querySelectorAll(".cookie-banner-blocked");
+		blocked.forEach((blocked) => {
+			const originalTag = blocked.getAttribute("data-original-tag");
+			const newElement = document.createElement(originalTag);
+			for (const attr of blocked.attributes) {
+				newElement.setAttribute(attr.name, attr.value);
+			}
+			newElement.children = blocked.children;
+			blocked.replaceWith(newElement);
+		});
+	}
+}
+
+function acceptAll() {
+	localStorage.setItem(
+		"cookies",
+		JSON.stringify({
+			allowed: ["all"],
+		}),
+	);
+	unblockElements("all");
+}
+function denyAll() {
+	localStorage.setItem(
+		"cookies",
+		JSON.stringify({
+			allowed: [],
+		}),
+	);
 }

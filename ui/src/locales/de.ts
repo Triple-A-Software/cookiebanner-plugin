@@ -39,4 +39,15 @@ export default {
 		selectors:
 			"Diese Selektoren geben an, welche elemente von dieser Cookie Kategorie blockiert werden",
 	},
+	api_error: {
+		placeholder_missing:
+			"Platzhalter fehlt in mindestens einer Cookie-kategorie",
+	},
+	toast: {
+		success: {
+			"/api/settings": {
+				POST: "Einstellungen erfolgreich gespeichert",
+			},
+		},
+	},
 } satisfies typeof en;

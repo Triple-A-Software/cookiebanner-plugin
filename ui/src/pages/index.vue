@@ -61,8 +61,8 @@ const { locale } = useI18n();
             <UFormField :label="$t('input.label.description')">
                 <LocalizedTextInput v-model="cookie_category.description" />
             </UFormField>
-            <UFormField :label="$t('input.label.placeholder_html')" :hint="$t('input.hint.placeholder_html')">
-                <UTextarea v-model="cookie_category.placeholder_html" class="w-full" :rows="12" />
+            <UFormField :label="$t('input.label.placeholder_html')" :hint="$t('input.hint.placeholder_html')" required>
+                <UTextarea v-model="cookie_category.placeholder_html" class="w-full" :rows="12" required />
             </UFormField>
             <div class="flex flex-row gap-4 items-center">
                 <h3 class="font-medium">{{ $t("selectors") }}</h3>

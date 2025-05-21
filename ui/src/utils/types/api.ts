@@ -7,6 +7,8 @@ export type API = {
 		};
 		POST: {
 			body: T.Settings;
+			error: T.ApiError;
+			response: T.StatusResponse;
 		};
 	};
 };

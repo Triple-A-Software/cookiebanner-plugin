@@ -37,7 +37,7 @@ type ExtractResponse<T> = Extract<T, { response: unknown }>["response"];
 export const safeFetch = ResultAsync.fromThrowable(fetch, (error) => {
 	if (typeof error === "string" && error === "resend") {
 		return {
-			error_message: "request has been aborted by client",
+			message: "aborted_request",
 		} satisfies ApiError;
 	}
 	if (
@@ -47,11 +47,11 @@ export const safeFetch = ResultAsync.fromThrowable(fetch, (error) => {
 		error.name === "AbortError"
 	) {
 		return {
-			error_message: "request has been aborted by client",
+			message: "aborted_request",
 		} satisfies ApiError;
 	}
 	return {
-		error_message: "unknown_error",
+		message: "unknown_error",
 	} satisfies ApiError;
 });
 
@@ -127,7 +127,7 @@ export async function fetchApi<
 
 // biome-ignore lint/suspicious/noExplicitAny: because we don't know the type
 function isApiError(json: any): json is ApiError {
-	return !!json.error_message;
+	return !!json.message;
 }
 
 export function useApiQuery<
@@ -247,8 +247,8 @@ export function useApiMutation<
 						});
 					}
 				},
-				(_) => {
-					const tKey = `toast.error.${path}.${String(options.method)}`;
+				(err) => {
+					const tKey = `api_error.${err.message}`;
 					if (te(tKey)) {
 						toast.add({
 							title: t(tKey),
