@@ -4,12 +4,13 @@
 	"version": "2.0.0",
 	"include_files": [
 		"target/release/cookie-banner",
-		"public/**/*",
-		"components/**/*"
+		"components/**/*",
+		"ui/dist/**/*"
 	],
 	"components": "./components",
 	"ui": "/ui",
 	"rewriter": "/internal/rewriter",
+	"bin": "target/release/cookie-banner",
 	"api": [
 		{
 			"route": "/api/settings",

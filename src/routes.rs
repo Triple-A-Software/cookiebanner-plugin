@@ -23,9 +23,12 @@ fn build_rewriter_handler(
         let tag_name = el.tag_name_preserve_case();
         el.set_tag_name("template")?;
         el.set_attribute("data-original-tag", &tag_name)?;
-        el.set_attribute("class", "cookie-banner-blocked")?;
+        el.set_attribute("cookie-banner-blocked", "")?;
         if let Some(placeholder) = selector.cookie_category.placeholder_html.as_deref() {
-            el.after(placeholder, ContentType::Html);
+            el.after(
+                &format!(r#"<div style="display:contents;" class="cookie-banner-placeholder">{placeholder}</div>"#),
+                ContentType::Html,
+            );
         }
         Ok(())
     })
