@@ -66,7 +66,7 @@ const { locale } = useI18n();
             </UFormField>
             <div class="flex flex-row gap-4 items-center">
                 <h3 class="font-medium">{{ $t("selectors") }}</h3>
-                <p class="text-neutral-600 dark:text-neutral-500 text-sm">{{ $t("hint.selectors") }}</p>
+                <p class="text-(--ui-text-muted) text-sm">{{ $t("hint.selectors") }}</p>
                 <UButton
                     color="neutral"
                     variant="ghost"
