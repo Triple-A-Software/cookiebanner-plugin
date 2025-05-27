@@ -10,12 +10,16 @@ export function init({ element, data, id }) {
 		element.classList.remove("hidden");
 		const accept_all_button = element.querySelector(".accept-all-btn");
 		const deny_all_button = element.querySelector(".deny-all-btn");
+		const close_button = element.querySelector(".close-btn");
 		accept_all_button.addEventListener("click", () => {
 			acceptAll();
 			element.classList.add("hidden");
 		});
 		deny_all_button.addEventListener("click", () => {
 			denyAll();
+			element.classList.add("hidden");
+		});
+		close_button.addEventListener("click", () => {
 			element.classList.add("hidden");
 		});
 	} else {
