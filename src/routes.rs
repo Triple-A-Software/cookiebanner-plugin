@@ -46,9 +46,9 @@ async fn internal_rewriter(State(state): State<AppState>, body: String) -> Strin
         r#"
         select * from selector
         left join lateral (
-            select row_to_json(cookie_category) as cookie_category from cookie_category
-                where cookie_category.id = selector.cookie_category_id
-        ) on true"#,
+            select row_to_json(c) as cookie_category from cookie_category c
+                where c.id = selector.cookie_category_id
+        ) cookie_category on true"#,
     )
     .fetch_all(&state.db)
     .await
