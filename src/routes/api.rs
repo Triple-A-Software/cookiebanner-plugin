@@ -136,11 +136,18 @@ async fn update_settings(
                 category.id = Some(inserted.id);
             }
             if let Some(selectors) = category.selectors.as_ref() {
-                sqlx::query(r#"delete from selector where not (id = ANY($1))"#)
-                    .bind(selectors.iter().map(|s| s.id).collect::<Vec<_>>())
-                    .execute(&state.db)
-                    .await
-                    .unwrap();
+                let category_id = category.id.expect(
+                    "category id is set after the insert/update branch above",
+                );
+                sqlx::query(
+                    r#"delete from selector
+                    where not (id = ANY($1)) and cookie_category_id = $2"#,
+                )
+                .bind(selectors.iter().map(|s| s.id).collect::<Vec<_>>())
+                .bind(category_id)
+                .execute(&state.db)
+                .await
+                .unwrap();
                 for selector in selectors.iter() {
                     if let Some(id) = selector.id {
                         sqlx::query(r#"update selector set selector = $1 where id = $2 "#)
