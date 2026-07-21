@@ -1,20 +1,16 @@
 {
-	"$schema": "https://neleto.io/schemas/fix/pluginsystem-rework-improvements/plugin_manifest_schema.json",
-	"name": "cookie-banner",
-	"version": "2.0.2",
-	"include_files": [
-		"target/release/cookie-banner",
-		"components/**/*",
-		"ui/dist/**/*"
-	],
-	"components": "./components",
-	"ui": "/ui",
-	"rewriter": "/internal/rewriter",
-	"bin": "target/release/cookie-banner",
-	"api": [
-		{
-			"route": "/api/settings",
-			"allowed_roles": ["admin", "developer", "editor", "author"]
-		}
-	]
+  "$schema": "https://neleto.io/schemas/fix/pluginsystem-rework-improvements/plugin_manifest_schema.json",
+  "name": "cookie-banner",
+  "version": "2.0.3",
+  "include_files": ["target/release/cookie-banner", "components/**/*", "ui/dist/**/*"],
+  "components": "./components",
+  "ui": "/ui",
+  "rewriter": "/internal/rewriter",
+  "bin": "target/release/cookie-banner",
+  "api": [
+    {
+      "route": "/api/settings",
+      "allowed_roles": ["admin", "developer", "editor", "author"]
+    }
+  ]
 }
