@@ -1,12 +1,13 @@
 {
   "$schema": "https://neleto.io/schemas/fix/pluginsystem-rework-improvements/plugin_manifest_schema.json",
   "name": "cookie-banner",
-  "version": "2.0.3",
-  "include_files": ["target/release/cookie-banner", "components/**/*", "ui/dist/**/*"],
+  "version": "2.0.4",
+  "hero_image": "assets/hero.png",
+  "include_files": ["target/x86_64-unknown-linux-gnu/release/cookie-banner", "components/**/*", "ui/dist/**/*"],
   "components": "./components",
   "ui": "/ui",
   "rewriter": "/internal/rewriter",
-  "bin": "target/release/cookie-banner",
+  "bin": "target/x86_64-unknown-linux-gnu/release/cookie-banner",
   "api": [
     {
       "route": "/api/settings",
