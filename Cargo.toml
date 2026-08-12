@@ -1,6 +1,6 @@
 [package]
 name = "cookie-banner"
-version = "2.0,4"
+version = "2.0.4"
 edition = "2024"
 
 [dependencies]
